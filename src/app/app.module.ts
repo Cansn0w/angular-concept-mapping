@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
+import { ConceptMapModule } from './ConceptMap/conceptmap.module';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -12,7 +14,9 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+
+    ConceptMapModule
   ],
   providers: [],
   bootstrap: [AppComponent]

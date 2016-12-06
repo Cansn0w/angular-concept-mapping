@@ -1,0 +1,8 @@
+<svg style="position: absolute; top: 0; left: 0; overflow: visible;">
+  <svg:path [attr.d]="linePath()" style="stroke: #000000; stroke-width: 1;">
+  </svg:path>
+</svg>
+
+<div class="label" [style.top.px]="positionY()" [style.left.px]="positionX()">
+  {{ proposition.text }}
+</div>
