@@ -7,28 +7,74 @@ class ButtonState {
 
   pressed: boolean;
   target: any;
+  event: any;
 
-  constructor (target: any = undefined, pressed: boolean = false) {
+  constructor (target: any = undefined, pressed: boolean = false, event: any = undefined) {
     this.pressed = pressed;
     this.target = target;
+    this.event = event;
   }
 
 }
 
 /**
+ * This interface enforces the command design pattern,
+ * which allows components to create command objects to be executed later under different condition.
+ */
+interface Executable {
+  execute(event: any): void;
+}
+
+/**
  * MouseService is used to monitor the user's mouse action across the app.
+ * This class implements the Observer design pattern, where components can register with it,
+ * and registered callback will be executed on different condition.
  */
 @Injectable()
 export class MouseService {
 
   state = {}
-
-  pressedOn(target: any, button: number = 1) {
-    this.state[button] = new ButtonState(target, true);
+  movement: any;
+  events = {
+    "mousedown": [],
+    "mouseup": [],
+    "mousemove": []
   }
 
-  releasedOn(target: any, button: number = 1) {
-    this.state[button] = new ButtonState(target, false);
+  private doTasks(event: string, browserEvent: any) {
+    for (let e of this.events[event].slice(0)) {
+      e.execute(browserEvent);
+    }
+  }
+
+  register(action: string, task: Executable) {
+    this.events[action].push(task);
+  }
+
+  unRegister(action: string, task: Executable) {
+    let index = this.events[action].indexOf(task);
+    if (index !== -1) {
+      this.events[action].splice(index);
+    }
+  }
+
+  pressedOn(target: any, event: any) {
+    this.doTasks("mousedown", event);
+    this.state[event.which] = new ButtonState(target, true, event);
+  }
+
+  releasedOn(target: any, event: any) {
+    this.doTasks("mouseup", event);
+    this.state[event.which] = new ButtonState(target, false, event);
+  }
+
+  moved(event) {
+    this.doTasks("mousemove", event);
+    this.movement = event;
+  }
+
+  isDragged(button: number) {
+    return this.movement.timeStamp > this.state[button].event.timeStamp;
   }
 
   isPressed(button: number = 1) {
@@ -36,5 +82,36 @@ export class MouseService {
       return this.state[button].pressed;
     }
     return false;
+  }
+}
+
+/**
+ * Helter class which register and unregister itself on construction and task completion.
+ */
+export class Task implements Executable {
+
+  event: string;
+  callback: (any: any, unregister: ()=>void)=> void;
+  service: MouseService;
+
+  /**
+   * Create a task object which register itself with the sevice system,
+   * Callback can accept a browser event,
+   * and an unregistration function which unregister the task conditionally.
+   * @constructor
+   */
+  constructor(service: MouseService, event: string, callback: (browserEvent: any, unregister: ()=>void)=> void) {
+    this.event = event;
+    this.callback = callback;
+    this.service = service;
+    this.service.register(this.event, this);
+  }
+
+  execute(browserEvent: any): void {
+    this.callback(browserEvent, ()=>{ this.unRegister(); });
+  }
+
+  unRegister() {
+    this.service.unRegister(this.event, this);
   }
 }

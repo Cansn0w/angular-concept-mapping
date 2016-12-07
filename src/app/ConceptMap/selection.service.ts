@@ -20,6 +20,15 @@ export class SelectionService {
     this.selected.push(concept);
   }
 
+  remove(concept: Concept) {
+    concept.selected = false;
+    this.selected.splice(this.selected.indexOf(concept), 1);
+  }
+
+  hasSelected(concept: Concept) {
+    return this.selected.indexOf(concept) !== -1;
+  }
+
   isEmpty() {
     return this.selected.length === 0;
   }

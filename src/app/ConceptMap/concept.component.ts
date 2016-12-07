@@ -1,7 +1,7 @@
 import { Component, Input, HostListener, HostBinding } from '@angular/core';
 
 import { Concept } from './conceptmap.types';
-import { MouseService  } from './mouse.service';
+import { Task, MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
 
 /**
@@ -21,19 +21,53 @@ export class ConceptComponent {
     ) { }
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {
+    this.mouse.pressedOn(this.concept, event);
     if (event.which === 1) {
-      this.selection.clear();
-      this.selection.add(this.concept);
+      if (event.ctrlKey || event.shiftKey) {
+        if (this.selection.hasSelected(this.concept)) {
+          new Task(this.mouse, "mouseup", (event, unregister) => {
+            if (event.which === 1) {
+              if (!this.mouse.isDragged(1)) {
+                this.selection.remove(this.concept);
+              }
+              unregister();
+            }
+          })
+        } else {
+          this.selection.add(this.concept);
+        }
+      } else {
+        if (this.selection.hasSelected(this.concept)) {
+          new Task(this.mouse, "mouseup", (event, unregister) => {
+            if (event.which === 1) {
+              if (!this.mouse.isDragged(1)) {
+                this.selection.clear();
+                this.selection.add(this.concept);
+              }
+              unregister();
+            }
+          })
+        } else {
+          this.selection.clear();
+          this.selection.add(this.concept);
+        }
+      }
 
-      this.mouse.pressedOn(this.concept, event.which);
-      event.stopPropagation();
-    }
-  }
+      let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
+        for (let c of this.selection.selected) {
+          c.x += event.movementX;
+          c.y += event.movementY;
+        }
+      })
 
-  @HostListener('mouseup', ['$event']) mouseUp(event) {
-    if (event.which === 1) {
-      this.mouse.releasedOn(this.concept, event.which);
+      new Task(this.mouse, "mouseup", (event, unregister)=> {
+        if (event.which === 1)  {
+          dragTask.unRegister();
+          unregister();
+        }
+      })
     }
+    event.stopPropagation();
   }
 
 }

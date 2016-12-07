@@ -1,7 +1,7 @@
 import { Component, HostListener, HostBinding } from '@angular/core';
 
 import { Concept, ConceptMap, Proposition } from './conceptmap.types';
-import { MouseService  } from './mouse.service';
+import { Task, MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
 
 /**
@@ -29,28 +29,36 @@ export class ConceptMapComponent {
   }
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {
-    if (event.which === 1) {
-      this.mouse.pressedOn(undefined, event.which);
+    this.mouse.pressedOn(undefined, event);
+    if (event.which === 1 && !event.ctrlKey) {
       this.selection.clear();
+    }
+
+    if (event.ctrlKey) {
+      let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
+        this.cursorStyle = "move";
+        for (let c of this.cmap.concepts) {
+          c.x += event.movementX;
+          c.y += event.movementY;
+        }
+      })
+
+      new Task(this.mouse, "mouseup", (event, unregister)=> {
+        if (event.which === 1)  {
+        this.cursorStyle = "default";
+          dragTask.unRegister();
+          unregister();
+        }
+      })
     }
   }
 
   @HostListener('mouseup', ['$event']) mouseUp(event) {
-    if (event.which === 1) {
-      this.mouse.releasedOn(undefined, event.which);
-      this.cursorStyle = "default";
-    }
+    this.mouse.releasedOn(undefined, event);
   }
 
   @HostListener('mousemove', ['$event']) mouseMove(event) {
-    if (this.mouse.isPressed(1)) {
-      this.cursorStyle = "move";
-      let targets = this.selection.isEmpty() ? this.cmap.concepts : this.selection.selected;
-      for (let c of targets) {
-        c.x += event.movementX;
-        c.y += event.movementY;
-      }
-    }
+    this.mouse.moved(event);
   }
 
 }
