@@ -1,4 +1,4 @@
-import { Concept } from './conceptmap.types';
+import { ConceptComponent } from './concept.component';
 import { Injectable } from '@angular/core';
 
 /**
@@ -6,26 +6,31 @@ import { Injectable } from '@angular/core';
  */
 @Injectable()
 export class SelectionService {
-  selected: Concept[] = [];  // todo - consider replacing array with set
+  selected: ConceptComponent[] = [];  // todo - consider replacing array with set
+
+  private deselect(c: ConceptComponent) {
+    c.selected = false;
+    c.editable = false;
+  }
 
   clear() {
     for (let c of this.selected) {
-      c.selected = false;
+      this.deselect(c);
     }
     this.selected = [];
   }
 
-  add(concept: Concept) {
+  add(concept: ConceptComponent) {
     concept.selected = true;
     this.selected.push(concept);
   }
 
-  remove(concept: Concept) {
-    concept.selected = false;
+  remove(concept: ConceptComponent) {
+    this.deselect(concept);
     this.selected.splice(this.selected.indexOf(concept), 1);
   }
 
-  hasSelected(concept: Concept) {
+  hasSelected(concept: ConceptComponent) {
     return this.selected.indexOf(concept) !== -1;
   }
 

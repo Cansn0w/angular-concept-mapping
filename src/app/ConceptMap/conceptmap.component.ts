@@ -28,6 +28,10 @@ export class ConceptMapComponent {
     this.cmap.propositions = [new Proposition('Prop1', this.cmap.concepts[0], this.cmap.concepts[1]), new Proposition('Prop2', this.cmap.concepts[1], this.cmap.concepts[2])]
   }
 
+  @HostListener("dblclick", ["$event"]) doubleClick(event) {
+    this.cmap.concepts.push(new Concept('', event.x, event.y));
+  }
+
   @HostListener('mousedown', ['$event']) mouseDown(event) {
     this.mouse.pressedOn(undefined, event);
     if (event.which === 1 && !event.ctrlKey) {

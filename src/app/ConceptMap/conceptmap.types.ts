@@ -6,8 +6,6 @@ export class Concept {
   x: number;
   y: number;
 
-  selected: boolean = false;
-
   constructor(text: string, x: number, y: number) {
     this.text = text;
     this.x = x;
