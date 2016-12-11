@@ -2,7 +2,7 @@
 cm-concept {
   position: absolute;
   transform: translate(-50%, -50%);
-  user-select:none;
+  min-height: 1em;
 
   background-color: lightgrey;
   padding: 6px 18px;

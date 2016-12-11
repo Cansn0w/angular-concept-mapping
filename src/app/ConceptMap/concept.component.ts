@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, HostBinding } from '@angular/core';
+import { Component, Input, HostListener, HostBinding, ElementRef } from '@angular/core';
 
 import { Concept } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
@@ -9,25 +9,54 @@ import { SelectionService  } from './selection.service';
  */
 @Component({
 	selector: 'cm-concept',
-  template: ' {{ concept.text }} ',
+  template: '{{ concept.text }}',
 })
 export class ConceptComponent {
 
   @Input() concept: Concept;
+
   constructor(
     private selection: SelectionService,
     private mouse: MouseService,
+    private element: ElementRef
     ) { }
 
   @HostBinding("class.selected") selected: boolean = false;
 
   @HostBinding("attr.contenteditable") editable: boolean = false;
 
+  @HostBinding("style.user-select") selectable: string = "none";
+
+  enableEdit(target) {
+    this.selectable = "text";
+    this.editable = true;
+    window.setTimeout(()=>{
+      target.focus();
+      var range = document.createRange();
+      range.selectNodeContents(target);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }, 0)
+  }
+
+  disableEdit() {
+    this.editable = false;
+    this.selectable = "none";
+  }
+
   @HostListener("dblclick", ["$event"]) doubleClick(event) {
-    if (!this.editable) {
-      this.editable = true;
-    }
     event.stopPropagation();
+    if (!this.editable) {
+      this.enableEdit(event.target);
+    }
+  }
+
+  ngOnInit() {
+    if(!this.concept.text) {
+      this.selection.add(this);
+      this.enableEdit(this.element.nativeElement);
+    }
   }
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {

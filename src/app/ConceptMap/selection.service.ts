@@ -10,7 +10,7 @@ export class SelectionService {
 
   private deselect(c: ConceptComponent) {
     c.selected = false;
-    c.editable = false;
+    c.disableEdit();
   }
 
   clear() {
