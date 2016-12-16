@@ -27,6 +27,19 @@ export class ConceptMapComponent {
     this.cmap.propositions = [new Proposition('Prop1', this.cmap.concepts[0], this.cmap.concepts[1]), new Proposition('Prop2', this.cmap.concepts[1], this.cmap.concepts[2])]
   }
 
+  @HostListener('window:keydown', ['$event']) keyDown(event) {
+    if (event.key === "Delete") {
+      this.selection.apply((element) => {
+        if (element.concept) {
+          this.cmap.removeConcept(element.concept);
+        } else {
+          this.cmap.removeProposition(element.proposition);
+        }
+      })
+      this.selection.clear()
+    }
+  }
+
   @HostListener("dblclick", ["$event"]) doubleClick(event) {
     this.cmap.concepts.push(new Concept('', event.x, event.y));
   }
