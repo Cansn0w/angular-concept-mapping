@@ -1,37 +1,41 @@
 import { ConceptComponent } from './concept.component';
 import { Injectable } from '@angular/core';
 
+
+export interface Selectable {
+  select(): void;
+  deselect(): void;
+  isSelected(): boolean;
+}
+
 /**
  * SelectionService is used to mark elements as selected and to act on the collection of selected elements.
  */
 @Injectable()
 export class SelectionService {
-  selected: ConceptComponent[] = [];  // todo - consider replacing array with set
+  selected: Selectable[] = [];  // todo - consider replacing array with set
 
-  private deselect(c: ConceptComponent) {
-    c.selected = false;
-    c.disableEdit();
+  add(obj: Selectable) {
+    obj.select();
+    this.selected.push(obj);
+  }
+
+  remove(obj: Selectable) {
+    obj.deselect();
+    this.selected.splice(this.selected.indexOf(obj), 1);
   }
 
   clear() {
-    for (let c of this.selected) {
-      this.deselect(c);
+    for (let obj of this.selected) {
+      obj.deselect();
     }
     this.selected = [];
   }
 
-  add(concept: ConceptComponent) {
-    concept.selected = true;
-    this.selected.push(concept);
-  }
-
-  remove(concept: ConceptComponent) {
-    this.deselect(concept);
-    this.selected.splice(this.selected.indexOf(concept), 1);
-  }
-
-  hasSelected(concept: ConceptComponent) {
-    return this.selected.indexOf(concept) !== -1;
+  apply(operation: (element) => void) {
+    for (let obj of this.selected) {
+      operation(obj);
+    }
   }
 
   isEmpty() {

@@ -2,7 +2,7 @@ import { Component, Input, HostListener, HostBinding, ElementRef } from '@angula
 
 import { Concept } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
-import { SelectionService  } from './selection.service';
+import { SelectionService, Selectable } from './selection.service';
 
 /**
  * Concept component. Define the concept html element.
@@ -11,29 +11,44 @@ import { SelectionService  } from './selection.service';
 	selector: 'cm-concept',
   template: '{{ concept.text }}',
 })
-export class ConceptComponent {
+export class ConceptComponent implements Selectable {
 
   @Input() concept: Concept;
+
+  @HostBinding("class.selected") selected: boolean = false;
+
+  @HostBinding("style.user-select") selectable: string = "none";
+
+  @HostBinding("attr.contenteditable") editable: boolean = false;
 
   constructor(
     private selection: SelectionService,
     private mouse: MouseService,
     private element: ElementRef
-    ) { }
+  ) { }
 
-  @HostBinding("class.selected") selected: boolean = false;
+  select(): void {
+    this.selected = true;
+  }
 
-  @HostBinding("attr.contenteditable") editable: boolean = false;
+  deselect(): void {
+    this.selected = false;
+    if (this.editable) {
+      this.disableEdit();
+    }
+  }
 
-  @HostBinding("style.user-select") selectable: string = "none";
+  isSelected(): boolean {
+    return this.selected;
+  }
 
-  enableEdit(target) {
+  enableEdit() {
     this.selectable = "text";
     this.editable = true;
     window.setTimeout(()=>{
-      target.focus();
+      this.element.nativeElement.focus();
       var range = document.createRange();
-      range.selectNodeContents(target);
+      range.selectNodeContents(this.element.nativeElement);
       var sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
@@ -45,17 +60,19 @@ export class ConceptComponent {
     this.selectable = "none";
   }
 
-  @HostListener("dblclick", ["$event"]) doubleClick(event) {
-    event.stopPropagation();
-    if (!this.editable) {
-      this.enableEdit(event.target);
+  ngOnInit() {
+    if(!this.concept.text) {
+      window.setTimeout(()=>{
+        this.selection.add(this);
+        this.enableEdit();
+      }, 0)
     }
   }
 
-  ngOnInit() {
-    if(!this.concept.text) {
-      this.selection.add(this);
-      this.enableEdit(this.element.nativeElement);
+  @HostListener("dblclick") doubleClick() {
+    event.stopPropagation();
+    if (!this.editable) {
+      this.enableEdit();
     }
   }
 
@@ -65,7 +82,7 @@ export class ConceptComponent {
       // disable drag while been editable
       if (!this.editable) {
         if (event.ctrlKey || event.shiftKey) {
-          if (this.selection.hasSelected(this)) {
+          if (this.selected) {
             new Task(this.mouse, "mouseup", (event, unregister) => {
               if (event.which === 1) {
                 if (!this.mouse.isDragged(1)) {
@@ -78,7 +95,7 @@ export class ConceptComponent {
             this.selection.add(this);
           }
         } else {
-          if (this.selection.hasSelected(this)) {
+          if (this.selected) {
             new Task(this.mouse, "mouseup", (event, unregister) => {
               if (event.which === 1) {
                 if (!this.mouse.isDragged(1)) {
@@ -95,19 +112,22 @@ export class ConceptComponent {
         }
 
         let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
-            for (let c of this.selection.selected) {
-              c.concept.x += event.movementX;
-              c.concept.y += event.movementY;
+          this.selection.apply((element)=> {
+            if (element.concept) {
+              element.concept.x += event.movementX;
+              element.concept.y += event.movementY;
             }
           })
-          new Task(this.mouse, "mouseup", (event, unregister)=> {
-            if (event.which === 1)  {
-              dragTask.unRegister();
-              unregister();
-            }
-          })
-        }
+        })
+
+        new Task(this.mouse, "mouseup", (event, unregister)=> {
+          if (event.which === 1)  {
+            dragTask.unRegister();
+            unregister();
+          }
+        })
       }
+    }
 
     event.stopPropagation();
   }
