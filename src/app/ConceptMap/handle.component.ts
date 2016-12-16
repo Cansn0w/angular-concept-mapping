@@ -31,7 +31,7 @@ export class HandleComponent {
         return;
       }
     }
-    this.cmap.propositions.push(new Proposition('new prop', from, to))  // todo - replace stub
+    this.cmap.propositions.push(new Proposition('', from, to))  // todo - replace stub
   }
 
   lastFrom: Concept = new Concept(undefined, undefined, undefined);
@@ -52,13 +52,16 @@ export class HandleComponent {
       })
       new Task(this.mouse, "mouseup", (event, unregister)=> {
         if (event.which === 1)  {
-          if (this.mouse.state[1].target && this.mouse.state[1].target.concept) {
-            this.createProposition(this.from, this.mouse.state[1].target.concept)
-          }
-          this.x = this.from.x;
-          this.y = this.from.y - 32;
-          dragTask.unRegister();
-          unregister();
+          setTimeout(()=> {
+            // todo - replace this error prone structure
+            if (this.mouse.state[1].target && this.mouse.state[1].target.concept) {
+              this.createProposition(this.from, this.mouse.state[1].target.concept)
+            }
+            this.x = this.from.x;
+            this.y = this.from.y - 32;
+            dragTask.unRegister();
+            unregister();
+          }, 0)
         }
       })
     }

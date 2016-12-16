@@ -3,6 +3,4 @@
   </svg:path>
 </svg>
 
-<div class="label" [style.top.px]="positionY()" [style.left.px]="positionX()">
-  {{ proposition.text }}
-</div>
+<div #label class="label" [style.top.px]="positionY()" [style.left.px]="positionX()" (mousedown)="mouseDown($event)" (dblclick)="doubleClick($event)" [class.selected]="selected" [style.user-select]="selectable" [attr.contenteditable]="editable">{{ proposition.text }}</div>

@@ -59,21 +59,26 @@ export class MouseService {
   }
 
   pressedOn(target: any, event: any) {
-    this.state[event.which] = new ButtonState(target, true, event);
+    // todo - This structure is error prone as the state changes so tasks are tricker to design
     this.doTasks("mousedown", event);
+    this.state[event.which] = new ButtonState(target, true, event);
   }
 
   releasedOn(target: any, event: any) {
-    this.state[event.which] = new ButtonState(target, false, event);
+    // todo - This structure is error prone as the state changes so tasks are tricker to design
     this.doTasks("mouseup", event);
+    this.state[event.which] = new ButtonState(target, false, event);
   }
 
   moved(event) {
-    this.doTasks("mousemove", event);
-    this.movement = event;
+    //  this condition filters some movement events that are actually not moved on Chrome
+    if (event.movementX !== 0 || event.movementY !== 0) {
+      this.doTasks("mousemove", event);
+      this.movement = event;
+    }
   }
 
-  isDragged(button: number) {
+  hasDragged(button: number) {
     return this.movement.timeStamp > this.state[button].event.timeStamp;
   }
 

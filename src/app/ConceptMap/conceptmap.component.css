@@ -25,7 +25,8 @@ cm-handle {
 .label {
   position: absolute;
   transform: translate(-50%, -50%);
-  user-select:none;
+  min-height: 1em;
+
   background-color:#fff;
   padding: 4px 10px;
   border-radius: 10px;
