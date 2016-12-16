@@ -1,0 +1,5 @@
+<svg>
+  <svg:path [attr.d]="linePath()"></svg:path>
+</svg>
+
+<div id='cm-handle-label' [style.left.px]="x" [style.top.px]="y" (mousedown)="mouseDown($event)">Drag to link</div>

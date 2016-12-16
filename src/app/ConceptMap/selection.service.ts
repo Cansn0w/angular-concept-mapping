@@ -13,7 +13,23 @@ export interface Selectable {
  */
 @Injectable()
 export class SelectionService {
-  selected: Selectable[] = [];  // todo - consider replacing array with set
+  selected: Selectable[] = [];  // todo - consider replacing array with set.
+
+  /**
+   * Select the object and deselect the rest.
+   * similar to a clear followed by an add
+   */
+  select(obj: Selectable) {
+    let index = this.selected.indexOf(obj);
+    if (index === -1) {
+      this.clear();
+      this.add(obj);
+    } else {
+      this.selected.splice(index, 1);
+      this.clear();
+      this.selected.push(obj);
+    }
+  }
 
   add(obj: Selectable) {
     obj.select();

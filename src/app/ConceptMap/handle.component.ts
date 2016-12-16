@@ -9,20 +9,29 @@ import { Task, MouseService  } from './mouse.service';
  */
 @Component({
   selector: 'cm-handle',
-  template: 'Link',
+  templateUrl: './handle.component.html',
   styleUrls: ['./conceptmap.component.css']
 })
 export class HandleComponent {
 
   @Input() from: Concept;
 
-  @HostBinding("style.left.px") x: number;
-  @HostBinding("style.top.px") y: number;
+  x: number;
+  y: number;
 
   constructor(
     private mouse: MouseService,
     private cmap: ConceptMap
     ) { }
+
+  lastFrom: Concept = new Concept(undefined, undefined, undefined);
+  ngDoCheck() {
+    if (this.lastFrom.x != this.from.x || this.lastFrom.y != this.from.y) {
+      this.lastFrom = new Concept(this.from.text, this.from.x, this.from.y);
+      this.x = this.from.x;
+      this.y = this.from.y - 32;
+    }
+  }
 
   createProposition(from: Concept, to: Concept) {
     // Check if there is already a proposition
@@ -34,16 +43,11 @@ export class HandleComponent {
     this.cmap.propositions.push(new Proposition('', from, to))  // todo - replace stub
   }
 
-  lastFrom: Concept = new Concept(undefined, undefined, undefined);
-  ngDoCheck() {
-    if (this.lastFrom.x != this.from.x || this.lastFrom.y != this.from.y) {
-      this.lastFrom = new Concept(this.from.text, this.from.x, this.from.y);
-      this.x = this.from.x;
-      this.y = this.from.y - 32;
-    }
+  linePath() {
+    return ['M', this.from.x + ',' + this.from.y, 'L', this.x + ',' + this.y].join(' ')
   }
 
-  @HostListener('mousedown', ['$event']) mouseDown(event) {
+  mouseDown(event) {
     this.mouse.pressedOn(this, event);
     if (event.which === 1) {
       let dragTask = new Task(this.mouse, "mousemove", (event, unregister) => {

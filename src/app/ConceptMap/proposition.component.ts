@@ -31,8 +31,7 @@ export class PropositionComponent implements Selectable {
   ngOnInit() {
     if(!this.proposition.text) { // todo - a better way to detect is needed.
       window.setTimeout(()=>{
-        this.selection.clear();
-        this.selection.add(this);
+        this.selection.select(this);
         this.enableEdit();
       }, 0)
     }
@@ -117,15 +116,13 @@ export class PropositionComponent implements Selectable {
             new Task(this.mouse, "mouseup", (event, unregister) => {
               if (event.which === 1) {
                 if (!this.mouse.hasDragged(1)) {
-                  this.selection.clear();
-                  this.selection.add(this);
+                  this.selection.select(this);
                 }
                 unregister();
               }
             })
           } else {
-            this.selection.clear();
-            this.selection.add(this);
+            this.selection.select(this);
           }
         }
 
