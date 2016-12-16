@@ -4,8 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ConceptMapComponent } from './conceptmap.component';
 import { ConceptComponent } from './concept.component';
 import { PropositionComponent } from './proposition.component';
+import { HandleComponent } from './handle.component';
 import { MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
+import { ConceptMap } from './conceptmap.types'
 
 /**
  * ConceptMap module
@@ -14,7 +16,8 @@ import { SelectionService  } from './selection.service';
   declarations: [
     ConceptMapComponent,
     ConceptComponent,
-    PropositionComponent
+    PropositionComponent,
+    HandleComponent
   ],
   imports: [
     BrowserModule
@@ -24,7 +27,8 @@ import { SelectionService  } from './selection.service';
   ],
   providers: [
     MouseService,
-    SelectionService
+    SelectionService,
+    ConceptMap
   ]
 })
 export class ConceptMapModule {

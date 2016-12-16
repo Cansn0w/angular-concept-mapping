@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 /**
  * Represent concepts in concept maps.
  */
@@ -31,6 +33,7 @@ export class Proposition {
 /**
  * A collection of concepts and propositions.
  */
+@Injectable()
 export class ConceptMap {
   concepts: Concept[];
   propositions: Proposition[];

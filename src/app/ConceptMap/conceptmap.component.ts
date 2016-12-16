@@ -15,13 +15,12 @@ import { SelectionService  } from './selection.service';
 })
 export class ConceptMapComponent {
 
-  cmap: ConceptMap = new ConceptMap();
-
   @HostBinding('style.cursor') cursorStyle: string = "default";
 
   constructor(
     private selection: SelectionService,
-    private mouse: MouseService
+    private mouse: MouseService,
+    private cmap: ConceptMap
     ) {
 
     this.cmap.concepts = [new Concept('concept1', 100, 100), new Concept('concept2', 250, 250), new Concept('concept3', 400, 150)]

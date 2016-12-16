@@ -112,4 +112,8 @@ export class ConceptComponent {
     event.stopPropagation();
   }
 
+  @HostListener('mouseup', ['$event']) mouseUp(event) {
+    this.mouse.releasedOn(this, event);
+  }
+
 }

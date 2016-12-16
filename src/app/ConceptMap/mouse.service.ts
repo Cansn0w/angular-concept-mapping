@@ -59,13 +59,13 @@ export class MouseService {
   }
 
   pressedOn(target: any, event: any) {
-    this.doTasks("mousedown", event);
     this.state[event.which] = new ButtonState(target, true, event);
+    this.doTasks("mousedown", event);
   }
 
   releasedOn(target: any, event: any) {
-    this.doTasks("mouseup", event);
     this.state[event.which] = new ButtonState(target, false, event);
+    this.doTasks("mouseup", event);
   }
 
   moved(event) {
