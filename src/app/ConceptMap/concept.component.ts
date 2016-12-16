@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, HostBinding, ElementRef } from '@angular/core';
+import { Component, Input, HostListener, HostBinding, ElementRef, OnInit } from '@angular/core';
 
 import { Concept } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
@@ -8,18 +8,18 @@ import { SelectionService, Selectable } from './selection.service';
  * Concept component. Define the concept html element.
  */
 @Component({
-	selector: 'cm-concept',
+  selector: 'cm-concept',
   template: '{{ concept.text }}',
 })
-export class ConceptComponent implements Selectable {
+export class ConceptComponent implements Selectable, OnInit {
 
   @Input() concept: Concept;
 
-  @HostBinding("class.selected") selected: boolean = false;
+  @HostBinding('class.selected') selected: boolean = false;
 
-  @HostBinding("style.user-select") selectable: string = "none";
+  @HostBinding('style.user-select') selectable: string = 'none';
 
-  @HostBinding("attr.contenteditable") editable: boolean = false;
+  @HostBinding('attr.contenteditable') editable: boolean = false;
 
   constructor(
     private selection: SelectionService,
@@ -43,33 +43,33 @@ export class ConceptComponent implements Selectable {
   }
 
   enableEdit() {
-    this.selectable = "text";
+    this.selectable = 'text';
     this.editable = true;
-    window.setTimeout(()=>{
+    window.setTimeout(() => {
       this.element.nativeElement.focus();
-      var range = document.createRange();
+      let range = document.createRange();
       range.selectNodeContents(this.element.nativeElement);
-      var sel = window.getSelection();
+      let sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-    }, 0)
+    }, 0);
   }
 
   disableEdit() {
     this.editable = false;
-    this.selectable = "none";
+    this.selectable = 'none';
   }
 
   ngOnInit() {
-    if(!this.concept.text) {
-      window.setTimeout(()=>{
+    if (!this.concept.text) {
+      window.setTimeout(() => {
         this.selection.select(this);
         this.enableEdit();
-      }, 0)
+      }, 0);
     }
   }
 
-  @HostListener("dblclick", ['$event']) doubleClick(event) {
+  @HostListener('dblclick', ['$event']) doubleClick(event) {
     event.stopPropagation();
     // when not selecting
     if (!event.ctrlKey && !event.shiftKey) {
@@ -86,47 +86,47 @@ export class ConceptComponent implements Selectable {
       if (!this.editable) {
         if (event.ctrlKey || event.shiftKey) {
           if (this.selected) {
-            new Task(this.mouse, "mouseup", (event, unregister) => {
-              if (event.which === 1) {
+            new Task(this.mouse, 'mouseup', (e, unregister) => {
+              if (e.which === 1) {
                 if (!this.mouse.hasDragged(1)) {
                   this.selection.remove(this);
                 }
                 unregister();
               }
-            })
+            });
           } else {
             this.selection.add(this);
           }
         } else {
           if (this.selected) {
-            new Task(this.mouse, "mouseup", (event, unregister) => {
-              if (event.which === 1) {
+            new Task(this.mouse, 'mouseup', (e, unregister) => {
+              if (e.which === 1) {
                 if (!this.mouse.hasDragged(1)) {
                   this.selection.select(this);
                 }
                 unregister();
               }
-            })
+            });
           } else {
             this.selection.select(this);
           }
         }
 
-        let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
-          this.selection.apply((element)=> {
+        let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
+          this.selection.apply((element) => {
             if (element.concept) {
-              element.concept.x += event.movementX;
-              element.concept.y += event.movementY;
+              element.concept.x += e.movementX;
+              element.concept.y += e.movementY;
             }
-          })
-        })
+          });
+        });
 
-        new Task(this.mouse, "mouseup", (event, unregister)=> {
-          if (event.which === 1)  {
+        new Task(this.mouse, 'mouseup', (e, unregister) => {
+          if (e.which === 1)  {
             dragTask.unRegister();
             unregister();
           }
-        })
+        });
       }
     }
     event.stopPropagation();

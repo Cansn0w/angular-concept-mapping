@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, HostBinding } from '@angular/core';
+import { Component, Input, DoCheck } from '@angular/core';
 
 import { Concept, ConceptMap, Proposition } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
@@ -12,7 +12,9 @@ import { Task, MouseService  } from './mouse.service';
   templateUrl: './handle.component.html',
   styleUrls: ['./conceptmap.component.css']
 })
-export class HandleComponent {
+export class HandleComponent implements DoCheck {
+
+  private lastFrom: Concept = new Concept(undefined, undefined, undefined);
 
   @Input() from: Concept;
 
@@ -24,9 +26,8 @@ export class HandleComponent {
     private cmap: ConceptMap
     ) { }
 
-  lastFrom: Concept = new Concept(undefined, undefined, undefined);
   ngDoCheck() {
-    if (this.lastFrom.x != this.from.x || this.lastFrom.y != this.from.y) {
+    if (this.lastFrom.x !== this.from.x || this.lastFrom.y !== this.from.y) {
       this.lastFrom = new Concept(this.from.text, this.from.x, this.from.y);
       this.x = this.from.x;
       this.y = this.from.y - 32;
@@ -40,34 +41,35 @@ export class HandleComponent {
         return;
       }
     }
-    this.cmap.propositions.push(new Proposition('', from, to))  // todo - replace stub
+    this.cmap.propositions.push(new Proposition('', from, to));  // todo - replace stub
   }
 
   linePath() {
-    return ['M', this.from.x + ',' + this.from.y, 'L', this.x + ',' + this.y].join(' ')
+    return ['M', this.from.x + ',' + this.from.y, 'L', this.x + ',' + this.y].join(' ');
   }
 
   mouseDown(event) {
     this.mouse.pressedOn(this, event);
     if (event.which === 1) {
-      let dragTask = new Task(this.mouse, "mousemove", (event, unregister) => {
-        this.x += event.movementX;
-        this.y += event.movementY;
-      })
-      new Task(this.mouse, "mouseup", (event, unregister)=> {
-        if (event.which === 1)  {
-          setTimeout(()=> {
+      let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
+        this.x += e.movementX;
+        this.y += e.movementY;
+      });
+
+      new Task(this.mouse, 'mouseup', (e, unregister) => {
+        if (e.which === 1)  {
+          setTimeout(() => {
             // todo - replace this error prone structure
             if (this.mouse.state[1].target && this.mouse.state[1].target.concept) {
-              this.createProposition(this.from, this.mouse.state[1].target.concept)
+              this.createProposition(this.from, this.mouse.state[1].target.concept);
             }
             this.x = this.from.x;
             this.y = this.from.y - 32;
             dragTask.unRegister();
             unregister();
-          }, 0)
+          }, 0);
         }
-      })
+      });
     }
     event.stopPropagation();
   }

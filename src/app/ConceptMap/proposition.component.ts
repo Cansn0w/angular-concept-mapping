@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 
 import { Proposition } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
@@ -9,18 +9,18 @@ import { SelectionService, Selectable } from './selection.service';
  * This element further contains an SVG path and a label.
  */
 @Component({
-	selector: 'cm-proposition',
+  selector: 'cm-proposition',
   templateUrl: './proposition.component.html',
   styleUrls: ['./conceptmap.component.css']
 })
-export class PropositionComponent implements Selectable {
+export class PropositionComponent implements Selectable, OnInit {
 
   @Input() proposition: Proposition;
 
   @ViewChild('label') label: ElementRef;
 
   selected: boolean = false;
-  selectable: string = "none";
+  selectable: string = 'none';
   editable: boolean = false;
 
   constructor(
@@ -29,11 +29,11 @@ export class PropositionComponent implements Selectable {
   ) { }
 
   ngOnInit() {
-    if(!this.proposition.text) { // todo - a better way to detect is needed.
-      window.setTimeout(()=>{
+    if (!this.proposition.text) { // todo - a better way to detect is needed.
+      window.setTimeout(() => {
         this.selection.select(this);
         this.enableEdit();
-      }, 0)
+      }, 0);
     }
   }
 
@@ -46,7 +46,10 @@ export class PropositionComponent implements Selectable {
   }
 
   linePath() {
-    return ['M', this.proposition.from.x + ',' + this.proposition.from.y, 'L', this.proposition.to.x + ',' + this.proposition.to.y].join(' ')
+    return [
+      'M', this.proposition.from.x + ',' + this.proposition.from.y,
+      'L', this.proposition.to.x + ',' + this.proposition.to.y
+    ].join(' ');
   }
 
   select(): void {
@@ -65,21 +68,21 @@ export class PropositionComponent implements Selectable {
   }
 
   enableEdit() {
-    this.selectable = "text";
+    this.selectable = 'text';
     this.editable = true;
-    window.setTimeout(()=>{
+    window.setTimeout(() => {
       this.label.nativeElement.focus();
-      var range = document.createRange();
+      let range = document.createRange();
       range.selectNodeContents(this.label.nativeElement);
-      var sel = window.getSelection();
+      let sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-    }, 0)
+    }, 0);
   }
 
   disableEdit() {
     this.editable = false;
-    this.selectable = "none";
+    this.selectable = 'none';
   }
 
   doubleClick(event) {
@@ -100,47 +103,47 @@ export class PropositionComponent implements Selectable {
       if (!this.editable) {
         if (event.ctrlKey || event.shiftKey) {
           if (this.selected) {
-            new Task(this.mouse, "mouseup", (event, unregister) => {
-              if (event.which === 1) {
+            new Task(this.mouse, 'mouseup', (e, unregister) => {
+              if (e.which === 1) {
                 if (!this.mouse.hasDragged(1)) {
                   this.selection.remove(this);
                 }
                 unregister();
               }
-            })
+            });
           } else {
             this.selection.add(this);
           }
         } else {
           if (this.selected) {
-            new Task(this.mouse, "mouseup", (event, unregister) => {
-              if (event.which === 1) {
+            new Task(this.mouse, 'mouseup', (e, unregister) => {
+              if (e.which === 1) {
                 if (!this.mouse.hasDragged(1)) {
                   this.selection.select(this);
                 }
                 unregister();
               }
-            })
+            });
           } else {
             this.selection.select(this);
           }
         }
 
-        let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
-          this.selection.apply((element)=> {
+        let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
+          this.selection.apply((element) => {
             if (element.concept) {
-              element.concept.x += event.movementX;
-              element.concept.y += event.movementY;
+              element.concept.x += e.movementX;
+              element.concept.y += e.movementY;
             }
-          })
-        })
+          });
+        });
 
-        new Task(this.mouse, "mouseup", (event, unregister)=> {
-          if (event.which === 1)  {
+        new Task(this.mouse, 'mouseup', (e, unregister) => {
+          if (e.which === 1)  {
             dragTask.unRegister();
             unregister();
           }
-        })
+        });
       }
     }
     event.stopPropagation();

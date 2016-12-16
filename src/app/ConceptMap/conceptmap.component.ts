@@ -1,6 +1,6 @@
 import { Component, HostListener, HostBinding } from '@angular/core';
 
-import { Concept, ConceptMap, Proposition } from './conceptmap.types';
+import { Concept, ConceptMap } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
 
@@ -9,13 +9,13 @@ import { SelectionService  } from './selection.service';
  * This element generates a number of concept and propositon elements to create a concept map.
  */
 @Component({
-	selector: 'concept-map',
+  selector: 'concept-map',
   templateUrl: './conceptmap.component.html',
   styleUrls: ['./conceptmap.component.css']
 })
 export class ConceptMapComponent {
 
-  @HostBinding('style.cursor') cursorStyle: string = "default";
+  @HostBinding('style.cursor') cursorStyle: string = 'default';
 
   constructor(
     private selection: SelectionService,
@@ -24,19 +24,19 @@ export class ConceptMapComponent {
   ) { }
 
   @HostListener('window:keydown', ['$event']) keyDown(event) {
-    if (event.key === "Delete") {
+    if (event.key === 'Delete') {
       this.selection.apply((element) => {
         if (element.concept) {
           this.cmap.removeConcept(element.concept);
         } else {
           this.cmap.removeProposition(element.proposition);
         }
-      })
-      this.selection.clear()
+      });
+      this.selection.clear();
     }
   }
 
-  @HostListener("dblclick", ["$event"]) doubleClick(event) {
+  @HostListener('dblclick', ['$event']) doubleClick(event) {
     this.cmap.concepts.push(new Concept('', event.x, event.y));
   }
 
@@ -47,21 +47,21 @@ export class ConceptMapComponent {
     }
 
     if (event.ctrlKey) {
-      let dragTask = new Task(this.mouse, "mousemove", (event, unregister)=> {
-        this.cursorStyle = "move";
+      let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
+        this.cursorStyle = 'move';
         for (let c of this.cmap.concepts) {
-          c.x += event.movementX;
-          c.y += event.movementY;
+          c.x += e.movementX;
+          c.y += e.movementY;
         }
-      })
+      });
 
-      new Task(this.mouse, "mouseup", (event, unregister)=> {
-        if (event.which === 1)  {
-        this.cursorStyle = "default";
+      new Task(this.mouse, 'mouseup', (e, unregister) => {
+        if (e.which === 1)  {
+        this.cursorStyle = 'default';
           dragTask.unRegister();
           unregister();
         }
-      })
+      });
     }
   }
 

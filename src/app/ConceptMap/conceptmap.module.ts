@@ -7,7 +7,7 @@ import { PropositionComponent } from './proposition.component';
 import { HandleComponent } from './handle.component';
 import { MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
-import { ConceptMap } from './conceptmap.types'
+import { ConceptMap } from './conceptmap.types';
 
 /**
  * ConceptMap module
