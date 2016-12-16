@@ -1,8 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent { }
+export class AppComponent {
+  helpText: boolean = true;
+
+  @HostListener("dblclick") doubleClick() {
+    this.helpText = false;
+  }
+
+}

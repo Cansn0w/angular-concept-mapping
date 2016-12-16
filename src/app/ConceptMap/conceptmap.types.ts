@@ -35,8 +35,9 @@ export class Proposition {
  */
 @Injectable()
 export class ConceptMap {
-  concepts: Concept[];
-  propositions: Proposition[];
+
+  concepts: Concept[] = [];
+  propositions: Proposition[] = [];
 
   addConcept(text: string, x: number, y: number) {
     this.concepts.push(new Concept(text, x, y));

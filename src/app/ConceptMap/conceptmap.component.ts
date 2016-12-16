@@ -21,11 +21,7 @@ export class ConceptMapComponent {
     private selection: SelectionService,
     private mouse: MouseService,
     private cmap: ConceptMap
-    ) {
-
-    this.cmap.concepts = [new Concept('concept1', 100, 100), new Concept('concept2', 250, 250), new Concept('concept3', 400, 150)]
-    this.cmap.propositions = [new Proposition('Prop1', this.cmap.concepts[0], this.cmap.concepts[1]), new Proposition('Prop2', this.cmap.concepts[1], this.cmap.concepts[2])]
-  }
+  ) { }
 
   @HostListener('window:keydown', ['$event']) keyDown(event) {
     if (event.key === "Delete") {
