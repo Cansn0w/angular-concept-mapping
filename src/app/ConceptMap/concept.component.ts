@@ -17,7 +17,7 @@ export class ConceptComponent implements Selectable, OnInit {
 
   @HostBinding('class.selected') selected: boolean = false;
 
-  @HostBinding('style.user-select') selectable: string = 'none';
+  @HostBinding('class.prevent-select') preventSelect: boolean = true;
 
   @HostBinding('attr.contenteditable') editable: boolean = false;
 
@@ -26,6 +26,15 @@ export class ConceptComponent implements Selectable, OnInit {
     private mouse: MouseService,
     private element: ElementRef
   ) { }
+
+  ngOnInit() {
+    if (!this.concept.text) {
+      window.setTimeout(() => {
+        this.selection.select(this);
+        this.enableEdit();
+      }, 0);
+    }
+  }
 
   select(): void {
     this.selected = true;
@@ -43,7 +52,8 @@ export class ConceptComponent implements Selectable, OnInit {
   }
 
   enableEdit() {
-    this.selectable = 'text';
+    // todo - replace with more portable implemetation.
+    this.preventSelect = false;
     this.editable = true;
     window.setTimeout(() => {
       this.element.nativeElement.focus();
@@ -57,16 +67,7 @@ export class ConceptComponent implements Selectable, OnInit {
 
   disableEdit() {
     this.editable = false;
-    this.selectable = 'none';
-  }
-
-  ngOnInit() {
-    if (!this.concept.text) {
-      window.setTimeout(() => {
-        this.selection.select(this);
-        this.enableEdit();
-      }, 0);
-    }
+    this.preventSelect = true;
   }
 
   @HostListener('dblclick', ['$event']) doubleClick(event) {
@@ -81,6 +82,7 @@ export class ConceptComponent implements Selectable, OnInit {
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {
     this.mouse.pressedOn(this.concept, event);
+    // todo - refactor this.
     if (event.which === 1) {
       // disable drag while been editable
       if (!this.editable) {

@@ -9,15 +9,6 @@ cm-concept {
   border: 1px solid black;
 }
 
-#cm-handle-label {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  user-select: none;
-
-  background-color: white;
-  border: 1px solid black;
-}
-
 svg {
   position: absolute;
   overflow: visible;
@@ -28,6 +19,20 @@ svg {
 path {
   stroke: #000000;
   stroke-width: 1;
+}
+
+#cm-handle-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid black;
+}
+
+.prevent-select {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 .selected {

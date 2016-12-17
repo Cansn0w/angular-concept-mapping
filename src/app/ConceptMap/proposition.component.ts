@@ -20,7 +20,7 @@ export class PropositionComponent implements Selectable, OnInit {
   @ViewChild('label') label: ElementRef;
 
   selected: boolean = false;
-  selectable: string = 'none';
+  preventSelect: boolean = true;
   editable: boolean = false;
 
   constructor(
@@ -68,7 +68,7 @@ export class PropositionComponent implements Selectable, OnInit {
   }
 
   enableEdit() {
-    this.selectable = 'text';
+    this.preventSelect = false;
     this.editable = true;
     window.setTimeout(() => {
       this.label.nativeElement.focus();
@@ -82,7 +82,7 @@ export class PropositionComponent implements Selectable, OnInit {
 
   disableEdit() {
     this.editable = false;
-    this.selectable = 'none';
+    this.preventSelect = true;
   }
 
   doubleClick(event) {
