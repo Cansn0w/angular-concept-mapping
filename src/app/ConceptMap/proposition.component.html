@@ -2,4 +2,4 @@
   <svg:path [attr.d]="linePath()"></svg:path>
 </svg>
 
-<div #label class="cm-label" [style.top.px]="positionY()" [style.left.px]="positionX()" (mousedown)="mouseDown($event)" (dblclick)="doubleClick($event)" [class.selected]="selected" [class.prevent-select]="preventSelect" [attr.contenteditable]="editable">{{ proposition.text }}</div>
+<div #label class="cm-label" [style.top.px]="y()" [style.left.px]="x()" (mousedown)="mouseDown($event);" (mouseup)="mouseUp($event);" (dblclick)="doubleClick($event);" [class.selected]="selected" [class.prevent-select]="preventSelect" [attr.contenteditable]="editable">{{ proposition.text }}</div>

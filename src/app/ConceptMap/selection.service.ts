@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 
 export interface Selectable {
+  selected: boolean;
   select(): void;
   deselect(): void;
-  isSelected(): boolean;
 }
 
 /**

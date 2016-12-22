@@ -39,7 +39,7 @@ describe('TestAppComponent', () => {
     fixture.detectChanges();
     expect(compiled.querySelector('div').textContent).toContain('Double click to create a concept');
 
-    fixture.debugElement.triggerEventHandler('dblclick', {})
+    fixture.debugElement.triggerEventHandler('dblclick', {});
     fixture.detectChanges();
     expect(compiled.querySelector('div')).toBeNull;
   }));

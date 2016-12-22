@@ -33,6 +33,7 @@ interface Executable {
 @Injectable()
 export class MouseService {
 
+  cursorStyle: string = 'default';
   state = {};
   movement: any;
   events = {
