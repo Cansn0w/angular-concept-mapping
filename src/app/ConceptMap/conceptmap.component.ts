@@ -57,7 +57,7 @@ export class ConceptMapComponent {
 
       new Task(this.mouse, 'mouseup', (e, unregister) => {
         if (e.which === 1)  {
-        this.cursorStyle = 'default';
+          this.cursorStyle = 'default';
           dragTask.unRegister();
           unregister();
         }
