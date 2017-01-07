@@ -1,7 +1,7 @@
 {
   "project": {
-    "version": "1.0.0-beta.21",
-    "name": "cmap"
+    "version": "1.0.0-beta.24",
+    "name": "angular2-concept-mapping"
   },
   "apps": [
     {

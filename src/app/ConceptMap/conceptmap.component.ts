@@ -1,8 +1,9 @@
-import { Component, HostListener, HostBinding, DoCheck } from '@angular/core';
+import { Component, HostListener, HostBinding, DoCheck, ViewChildren, QueryList } from '@angular/core';
 
 import { Concept, ConceptMap } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
+import { ConceptComponent } from './concept.component';
 
 /**
  * Concept Map component. Define the concept map html element.
@@ -17,6 +18,8 @@ export class ConceptMapComponent implements DoCheck {
 
   @HostBinding('style.cursor') cursorStyle: string = 'default';
 
+  @ViewChildren(ConceptComponent) conceptComponents: QueryList<ConceptComponent>;
+
   constructor(
     private selection: SelectionService,
     private mouse: MouseService,
@@ -30,7 +33,7 @@ export class ConceptMapComponent implements DoCheck {
   /**
    * This method will return a single concept if it's the only selected, otherwise undefined
    */
-  getSingleSelection() {
+  get getSingleSelection() {
     if (this.selection.selected.length === 1) {
       let c: any = this.selection.selected[0];
       if (c.concept) {
@@ -41,6 +44,7 @@ export class ConceptMapComponent implements DoCheck {
   }
 
   @HostListener('window:keydown', ['$event']) keyDown(event) {
+    // delete
     if (event.key === 'Delete') {
       this.selection.apply((element) => {
         if (element.concept) {
@@ -50,6 +54,13 @@ export class ConceptMapComponent implements DoCheck {
         }
       });
       this.selection.clear();
+    } else
+    // select all
+    if (event.key.toUpperCase() === 'A' && event.ctrlKey && !event.shiftKey && !event.altKey) {
+      this.selection.clear();
+      this.conceptComponents.forEach((concept) => {
+        this.selection.add(concept);
+      })
     }
   }
 

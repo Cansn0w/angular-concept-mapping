@@ -38,7 +38,7 @@ describe('ConceptMap App', function() {
     expect(element(by.css('cm-concept')).getAttribute('class')).not.toContain('selected');
   });
 
-  xit('ctrl-a will select the concept', () => {
+  it('ctrl-a will select the concept', () => {
     browser.actions().keyDown(Key.CONTROL).sendKeys('a').keyUp(Key.CONTROL).perform();
     expect(element(by.css('cm-concept')).getAttribute('class')).toContain('selected');
   });

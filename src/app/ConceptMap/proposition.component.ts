@@ -27,15 +27,15 @@ export class PropositionComponent extends ElementComponent implements OnInit {
     }
   }
 
-  x() {
+  get x() {
     return (this.proposition.from.x + this.proposition.to.x) / 2;
   }
 
-  y() {
+  get y() {
     return (this.proposition.from.y + this.proposition.to.y) / 2;
   }
 
-  linePath() {
+  get linePath() {
     return [
       'M', this.proposition.from.x + ',' + this.proposition.from.y,
       'L', this.proposition.to.x + ',' + this.proposition.to.y

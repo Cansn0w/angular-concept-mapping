@@ -31,8 +31,10 @@ export class SelectionService {
   }
 
   add(obj: Selectable) {
-    obj.select();
-    this.selected.push(obj);
+    if (!obj.selected) {
+      obj.select();
+      this.selected.push(obj);
+    }
   }
 
   remove(obj: Selectable) {

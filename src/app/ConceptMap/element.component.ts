@@ -53,7 +53,6 @@ export class ElementComponent implements Selectable {
 
   mouseDown(event) {
     this.mouse.pressedOn(this, event);
-    // todo - refactor this.
     if (event.which === 1) {
       // disable drag while been editable
       if (!this.editable) {
