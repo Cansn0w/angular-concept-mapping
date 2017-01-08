@@ -2,6 +2,7 @@ import { Component, Input, DoCheck } from '@angular/core';
 
 import { Concept, ConceptMap, Proposition } from './conceptmap.types';
 import { Task, MouseService  } from './mouse.service';
+import { ConceptComponent } from './concept.component';
 
 /**
  * Handle component. used to create propositions.
@@ -14,12 +15,12 @@ import { Task, MouseService  } from './mouse.service';
 })
 export class HandleComponent implements DoCheck {
 
-  private lastFrom: Concept = new Concept(undefined, undefined, undefined);
-
-  @Input() from: Concept;
+  @Input() from: ConceptComponent;
 
   x: number;
   y: number;
+
+  conceptPosition = {x: -1, y: -1};
 
   constructor(
     private mouse: MouseService,
@@ -27,10 +28,12 @@ export class HandleComponent implements DoCheck {
     ) { }
 
   ngDoCheck() {
-    if (this.lastFrom.x !== this.from.x || this.lastFrom.y !== this.from.y) {
-      this.lastFrom = new Concept(this.from.text, this.from.x, this.from.y);
-      this.x = this.from.x;
-      this.y = this.from.y - 32;
+    // check if the belonging concept moved and update position if needed
+    if (this.from.concept.x !== this.conceptPosition.x || this.from.concept.y !== this.conceptPosition.y) {
+      this.conceptPosition.x = this.from.concept.x;
+      this.conceptPosition.y = this.from.concept.y;
+      this.x = this.from.concept.x;
+      this.y = this.from.concept.y - 32;
     }
   }
 
@@ -45,7 +48,7 @@ export class HandleComponent implements DoCheck {
   }
 
   linePath() {
-    return ['M', this.from.x + ',' + this.from.y, 'L', this.x + ',' + this.y].join(' ');
+    return ['M', this.from.concept.x + ',' + this.from.concept.y, 'L', this.x + ',' + this.y].join(' ');
   }
 
   mouseDown(event) {
@@ -61,10 +64,10 @@ export class HandleComponent implements DoCheck {
           setTimeout(() => {
             // todo - replace this error prone structure
             if (this.mouse.state[1].target && this.mouse.state[1].target.concept) {
-              this.createProposition(this.from, this.mouse.state[1].target.concept);
+              this.createProposition(this.from.concept, this.mouse.state[1].target.concept);
             }
-            this.x = this.from.x;
-            this.y = this.from.y - 32;
+            this.x = this.from.concept.x;
+            this.y = this.from.concept.y - 32;
             dragTask.unRegister();
             unregister();
           }, 0);

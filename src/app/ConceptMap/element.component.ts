@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { MouseService, Task  } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
+import { ComponentManager } from './componentmanager.service';
 
 /**
  * Base element component. controls selection, draging and editing.
@@ -18,6 +19,7 @@ export class ElementComponent implements Selectable {
   constructor(
     protected selection: SelectionService,
     protected mouse: MouseService,
+    protected manager: ComponentManager
   ) { }
 
   select(): void {

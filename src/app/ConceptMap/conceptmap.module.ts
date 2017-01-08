@@ -8,6 +8,7 @@ import { HandleComponent } from './handle.component';
 import { MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
 import { ConceptMap } from './conceptmap.types';
+import { ComponentManager } from './componentmanager.service';
 
 /**
  * ConceptMap module
@@ -28,7 +29,8 @@ import { ConceptMap } from './conceptmap.types';
   providers: [
     MouseService,
     SelectionService,
-    ConceptMap
+    ConceptMap,
+    ComponentManager
   ]
 })
 export class ConceptMapModule {

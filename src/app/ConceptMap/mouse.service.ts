@@ -35,7 +35,7 @@ export class MouseService {
 
   cursorStyle: string = 'default';
   state = {};
-  movement: any;
+  movement: any = {timeStamp: 0};
   events = {
     'mousedown': [],
     'mouseup': [],

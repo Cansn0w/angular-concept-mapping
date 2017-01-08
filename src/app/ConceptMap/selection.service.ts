@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
-
+/**
+ * Class implementing this interface will be observing selection events, and will be notified on selecting and deselecting
+ */
 export interface Selectable {
-  selected: boolean;
   select(): void;
   deselect(): void;
 }
@@ -31,15 +32,18 @@ export class SelectionService {
   }
 
   add(obj: Selectable) {
-    if (!obj.selected) {
-      obj.select();
+    if (this.selected.indexOf(obj) === -1) {
       this.selected.push(obj);
+      obj.select();
     }
   }
 
   remove(obj: Selectable) {
-    obj.deselect();
-    this.selected.splice(this.selected.indexOf(obj), 1);
+    let index = this.selected.indexOf(obj);
+    if (index !== -1) {
+      this.selected.splice(index, 1);
+      obj.deselect();
+    }
   }
 
   clear() {

@@ -1,9 +1,10 @@
-import { Component, Input, HostListener, HostBinding, ElementRef, OnInit } from '@angular/core';
+import { Component, Input, HostListener, HostBinding, ElementRef, OnInit, OnDestroy } from '@angular/core';
 
 import { Concept } from './conceptmap.types';
 import { ElementComponent } from './element.component';
 import { MouseService  } from './mouse.service';
 import { SelectionService } from './selection.service';
+import { ComponentManager } from './componentmanager.service';
 
 /**
  * Concept component. Define the concept html element.
@@ -12,7 +13,7 @@ import { SelectionService } from './selection.service';
   selector: 'cm-concept',
   template: '{{ concept.text }}',
 })
-export class ConceptComponent extends ElementComponent implements OnInit {
+export class ConceptComponent extends ElementComponent implements OnInit, OnDestroy {
 
   @Input() concept: Concept;
 
@@ -23,20 +24,35 @@ export class ConceptComponent extends ElementComponent implements OnInit {
   @HostBinding('attr.contenteditable') editable: boolean = false;
 
   constructor(
-    selection: SelectionService,
-    mouse: MouseService,
-    private element: ElementRef
+    protected selection: SelectionService,
+    protected mouse: MouseService,
+    protected manager: ComponentManager,
+    protected element: ElementRef
   ) {
-    super(selection, mouse);
+    super(selection, mouse, manager);
+  }
+
+  get height() {
+    return this.element.nativeElement.offsetHeight;
+  }
+
+  get width() {
+    return this.element.nativeElement.offsetWidth;
   }
 
   ngOnInit() {
+    this.manager.addConceptComponent(this);
+    // get focus on creation
     if (!this.concept.text) {
       window.setTimeout(() => {
         this.selection.select(this);
         this.enableEdit();
       }, 0);
     }
+  }
+
+  ngOnDestroy() {
+    this.manager.removeConceptComponent(this);
   }
 
   enableEdit() {

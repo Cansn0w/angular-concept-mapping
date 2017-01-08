@@ -3,6 +3,7 @@ cm-concept {
   position: absolute;
   transform: translate(-50%, -50%);
   min-height: 1em;
+  z-index: 1;
 
   background-color: lightgrey;
   padding: 6px 18px;
