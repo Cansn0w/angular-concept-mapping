@@ -1,4 +1,5 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ConceptMapComponent } from './ConceptMap/conceptmap.component'
 
 @Component({
   selector: 'app-root',
@@ -6,10 +7,10 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  helpText: boolean = true;
+  @ViewChild(ConceptMapComponent) cmap: ConceptMapComponent;
 
-  @HostListener('dblclick') doubleClick() {
-    this.helpText = false;
+  get helpText() {
+    return this.cmap.cmap.concepts.length === 0;
   }
 
 }

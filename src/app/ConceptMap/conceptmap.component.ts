@@ -21,8 +21,8 @@ export class ConceptMapComponent implements DoCheck {
   constructor(
     private selection: SelectionService,
     private mouse: MouseService,
-    private cmap: ConceptMap,
-    private manager: ComponentManager
+    private manager: ComponentManager,
+    public cmap: ConceptMap,
   ) { }
 
   ngDoCheck() {
@@ -40,6 +40,30 @@ export class ConceptMapComponent implements DoCheck {
       }
     }
     return undefined;
+  }
+
+  import(event) {
+    let reader = new FileReader();
+
+    reader.onloadend = (event) => {
+      this.cmap.parseJson(reader.result);
+    }
+
+    reader.readAsText(event.target.files[0]);
+  }
+
+  export() {
+    // Create a downloadable filename
+    // reference http://stackoverflow.com/a/18197341
+
+    var a = document.createElement('a');
+    a.style.display = 'none';
+    a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.cmap.toJson()));
+    a.setAttribute('download', 'ConceptMap.json');
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
 
   @HostListener('window:keydown', ['$event']) keyDown(event) {
@@ -60,6 +84,10 @@ export class ConceptMapComponent implements DoCheck {
       for (let concept of this.manager.conceptComponents) {
         this.selection.add(concept);
       }
+    } else
+    if (event.key.toUpperCase() === 'S' && event.ctrlKey && !event.shiftKey && !event.altKey) {
+      this.export();
+      event.preventDefault();
     }
   }
 

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
  */
 export class Concept {
   text: string;
+  id: string;
   x: number;
   y: number;
 
@@ -28,6 +29,10 @@ export class Proposition {
     this.from = from;
     this.to = to;
   }
+}
+
+function randomHex(range = 0xffffffff) {
+  return Math.floor(Math.random() * range).toString(16);
 }
 
 /**
@@ -67,4 +72,72 @@ export class ConceptMap {
     }
   }
 
+  /**
+   * Export a concept map to JSON format
+   * will convert all concepts to an id.
+   */
+  toJson() {
+    let map = {
+      concepts: [],
+      propositions: []
+    }
+
+    // Efforts to avoid id collisions - not sure whether necessary :/
+    let lookup = {};
+
+    for (let c of this.concepts) {
+      if (c.id) {
+        lookup[c.id] = c;
+      }
+    }
+
+    for (let c of this.concepts) {
+       if (!c.id) {
+         let id = randomHex()
+         while (lookup[id]) {
+           id = randomHex();
+         }
+        c.id = id;
+        lookup[c.id] = c;
+      }
+    }
+
+    map.concepts = this.concepts;
+
+    for (let p of this.propositions) {
+      map.propositions.push({
+        text: p.text,
+        from: p.from.id,
+        to: p.to.id
+      })
+    }
+
+    return JSON.stringify(map);
+  }
+
+  /**
+   * Parse a JSON string into a concept map
+   * will overwrite current map if loaded successfully
+   */
+  parseJson(data: string) {
+    let map = JSON.parse(data);
+
+    let concepts = [];
+    let propositions = [];
+
+    let lookup = {};
+    for (let c of map.concepts) {
+      let concept = new Concept(c.text, c.x, c.y);
+      concept.id = c.id
+      lookup[c.id] = concept;
+      concepts.push(concept)
+    }
+
+    for (let p of map.propositions) {
+      propositions.push(new Proposition(p.text, lookup[p.from], lookup[p.to]))
+    }
+
+    this.concepts = concepts;
+    this.propositions = propositions;
+  }
 }

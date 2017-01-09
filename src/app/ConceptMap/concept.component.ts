@@ -11,7 +11,7 @@ import { ComponentManager } from './componentmanager.service';
  */
 @Component({
   selector: 'cm-concept',
-  template: '{{ concept.text }}',
+  template: '',
 })
 export class ConceptComponent extends ElementComponent implements OnInit, OnDestroy {
 
