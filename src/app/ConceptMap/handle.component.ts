@@ -48,7 +48,10 @@ export class HandleComponent implements DoCheck {
   }
 
   linePath() {
-    return ['M', this.from.concept.x + ',' + this.from.concept.y, 'L', this.x + ',' + this.y].join(' ');
+    return [
+      'M', this.from.concept.x, this.from.concept.y,
+      'L', this.x, this.y
+    ].join(' ');
   }
 
   mouseDown(event) {

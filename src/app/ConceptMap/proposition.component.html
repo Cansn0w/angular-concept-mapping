@@ -1,4 +1,5 @@
 <svg>
+  <svg:path *ngIf="ie" [attr.d]="linePath"></svg:path>
   <svg:path [attr.d]="linePath" marker-end="url(#cm-arrow)"></svg:path>
 </svg>
 

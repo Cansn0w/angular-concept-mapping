@@ -35,16 +35,17 @@ export class MouseService {
 
   cursorStyle: string = 'default';
   state = {};
-  movement: any = {timeStamp: 0};
+  movement = {movementX: 0, movementY: 0, timeStamp: 0};
+  position = {x: 0, y: 0};
   events = {
     'mousedown': [],
     'mouseup': [],
     'mousemove': []
   };
 
-  private doTasks(event: string, browserEvent: any) {
+  private doTasks(event: string, movement) {
     for (let e of this.events[event].slice(0)) {
-      e.execute(browserEvent);
+      e.execute(movement);
     }
   }
 
@@ -72,10 +73,17 @@ export class MouseService {
   }
 
   moved(event) {
+    let movement = {
+      movementX: event.clientX - this.position.x,
+      movementY: event.clientY - this.position.y,
+      timeStamp: event.timeStamp};
+
+    this.position.x = event.clientX;
+    this.position.y = event.clientY;
     //  this condition filters some movement events that are actually not moved on Chrome
-    if (event.movementX !== 0 || event.movementY !== 0) {
-      this.doTasks('mousemove', event);
-      this.movement = event;
+    if (movement.movementX !== 0 || movement.movementY !== 0) {
+      this.doTasks('mousemove', movement);
+      this.movement = movement;
     }
   }
 

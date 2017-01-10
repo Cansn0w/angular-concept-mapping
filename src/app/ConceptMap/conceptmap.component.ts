@@ -92,7 +92,7 @@ export class ConceptMapComponent implements DoCheck {
   }
 
   @HostListener('dblclick', ['$event']) doubleClick(event) {
-    this.cmap.concepts.push(new Concept('', event.x, event.y));
+    this.cmap.concepts.push(new Concept('', event.clientX, event.clientY));
   }
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {

@@ -4,6 +4,8 @@ import { ElementComponent } from './element.component';
 import { ConceptComponent } from './concept.component';
 import { Proposition } from './conceptmap.types';
 
+import { ie } from './etc';
+
 /**
  * Proposition component. Define the Proposition html element.
  * This element further contains an SVG path and a label.
@@ -51,6 +53,10 @@ export class PropositionComponent extends ElementComponent implements OnInit, On
     return (this.from.concept.y + this.to.concept.y) / 2;
   }
 
+  get ie() {
+    return ie;
+  }
+
   /**
    * Get the SVG Line path of the proposition
    * The end point of the line should fall on the edge of the 'to' concept component, therefore, line clipping is required here.
@@ -68,7 +74,7 @@ export class PropositionComponent extends ElementComponent implements OnInit, On
        * The two condition below indecates the direction of the 'from' concept at the 'to' concept
        * which is needed to decide which edge of the 'to' concept should be used for clipping.
        *
-       * t1, t2 will be show values illustrated below.
+       * t1, t2 will show values as illustrated below.
        *             \  false, true /
        *              +------------+
        * false, false | to concept | true, true
@@ -106,8 +112,8 @@ export class PropositionComponent extends ElementComponent implements OnInit, On
       this.vector.y = vy + dy;
     }
     return [
-      'M', this.from.concept.x + ',' + this.from.concept.y,
-      'L', (this.from.concept.x + this.vector.x) + ',' + (this.from.concept.y + this.vector.y)
+      'M', this.from.concept.x, this.from.concept.y,
+      'L', (this.from.concept.x + this.vector.x), (this.from.concept.y + this.vector.y)
     ].join(' ');
   }
 
