@@ -49,3 +49,11 @@ path {
   padding: 4px 10px;
   border-radius: 10px;
 }
+
+#rubber-band {
+  background-color: #99ccff;
+  border: 1px solid #0000dd;
+  position: absolute;
+  opacity: 0.3;
+  z-index: 2;
+}

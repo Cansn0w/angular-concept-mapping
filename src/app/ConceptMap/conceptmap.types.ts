@@ -80,7 +80,7 @@ export class ConceptMap {
     let map = {
       concepts: [],
       propositions: []
-    }
+    };
 
     // Efforts to avoid id collisions - not sure whether necessary :/
     let lookup = {};
@@ -93,7 +93,7 @@ export class ConceptMap {
 
     for (let c of this.concepts) {
        if (!c.id) {
-         let id = randomHex()
+         let id = randomHex();
          while (lookup[id]) {
            id = randomHex();
          }
@@ -109,7 +109,7 @@ export class ConceptMap {
         text: p.text,
         from: p.from.id,
         to: p.to.id
-      })
+      });
     }
 
     return JSON.stringify(map);
@@ -128,13 +128,13 @@ export class ConceptMap {
     let lookup = {};
     for (let c of map.concepts) {
       let concept = new Concept(c.text, c.x, c.y);
-      concept.id = c.id
+      concept.id = c.id;
       lookup[c.id] = concept;
-      concepts.push(concept)
+      concepts.push(concept);
     }
 
     for (let p of map.propositions) {
-      propositions.push(new Proposition(p.text, lookup[p.from], lookup[p.to]))
+      propositions.push(new Proposition(p.text, lookup[p.from], lookup[p.to]));
     }
 
     this.concepts = concepts;

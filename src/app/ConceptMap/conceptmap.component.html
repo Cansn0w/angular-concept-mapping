@@ -6,9 +6,11 @@
   </defs>
 </svg>
 
-<cm-concept *ngFor="let c of cmap.concepts" [concept]="c" [style.top.px]="c.y" [style.left.px]="c.x" [textContent]="c.text" (input)="c.text=$event.target.textContent"></cm-concept>
+<cm-concept *ngFor="let c of cmap.concepts" [concept]="c" [style.top.px]="c.y" [style.left.px]="c.x" [innerHTML]="c.text" (blur)="c.text=$event.target.innerHTML"></cm-concept>
 <cm-proposition *ngFor="let p of cmap.propositions" [proposition]="p"></cm-proposition>
 <cm-handle *ngIf="getSingleSelection" [from]="getSingleSelection"></cm-handle>
+
+<div *ngIf="rubberband" id="rubber-band" [style.top.px] = "rubberband.top" [style.left.px] = "rubberband.left" [style.width.px] = "rubberband.width" [style.height.px] = "rubberband.height"></div>
 
 <div class="prevent-select" style="position: absolute; z-index: 10; width: 100%; padding: 4px 0px; background-color: lightgrey;">
   <button (click)="export()">export</button>

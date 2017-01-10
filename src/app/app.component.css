@@ -3,3 +3,14 @@ concept-map {
   height: 100%;
   width: 100%;
 }
+
+.help-text {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  position: fixed;
+  cursor: default;
+  pointer-events: none;
+}

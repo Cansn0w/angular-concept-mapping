@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ConceptMapComponent } from './ConceptMap/conceptmap.component'
+import { ConceptMapComponent } from './ConceptMap/conceptmap.component';
 
 @Component({
   selector: 'app-root',
