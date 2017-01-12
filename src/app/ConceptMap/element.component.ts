@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { MouseService, Task  } from './mouse.service';
+import { MouseService } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
 
@@ -22,12 +22,9 @@ export class ElementComponent implements Selectable {
     protected manager: ComponentManager
   ) { }
 
-  select(): void {
-    this.selected = true;
-  }
+  select() { }
 
   deselect(): void {
-    this.selected = false;
     if (this.editable) {
       this.disableEdit();
     }
@@ -54,63 +51,71 @@ export class ElementComponent implements Selectable {
   }
 
   mouseDown(event) {
-    this.mouse.pressedOn(this, event);
+    this.mouse.down(this, event);
     if (event.which === 1) {
-      // disable drag while been editable
-      if (!this.editable) {
+      if (!this.editable /* disable drag while been editable */) {
+
         if (event.ctrlKey || event.shiftKey) {
           if (this.selected) {
-            new Task(this.mouse, 'mouseup', (e, unregister) => {
-              if (e.which === 1) {
-                if (!this.mouse.hasDragged(1)) {
+            let dragged = false;
+            this.mouse.drag(
+              e => dragged = true,
+              e => {
+                if (e.browserEvent.which === 1 && !dragged) {
                   this.selection.remove(this);
                 }
-                unregister();
               }
-            });
+            );
           } else {
             this.selection.add(this);
           }
         } else {
           if (this.selected) {
-            new Task(this.mouse, 'mouseup', (e, unregister) => {
-              if (e.which === 1) {
-                if (!this.mouse.hasDragged(1)) {
+            let dragged = false;
+            this.mouse.drag(
+              e => dragged = true,
+              e => {
+                if (e.browserEvent.which === 1 && !dragged) {
                   this.selection.select(this);
                 }
-                unregister();
               }
-            });
+            );
           } else {
             this.selection.select(this);
           }
         }
 
-        let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
-          this.mouse.cursorStyle = 'move';
-          this.selection.apply((element) => {
-            if (element.concept) {
-              element.concept.x += e.movementX;
-              element.concept.y += e.movementY;
+        this.mouse.drag(
+          e => {
+            this.mouse.cursorStyle = 'move';
+            for (let c of this.manager.conceptComponents) {
+              if (c.selected) {
+                c.concept.x += e.browserEvent.movementX;
+                c.concept.y += e.browserEvent.movementY;
+              }
             }
-          });
-        });
-
-        new Task(this.mouse, 'mouseup', (e, unregister) => {
-          if (e.which === 1)  {
-            this.mouse.cursorStyle = 'default';
-            dragTask.unRegister();
-            unregister();
+          },
+          e => {
+            if (e.browserEvent.which === 1)  {
+              this.mouse.cursorStyle = 'default';
+            }
           }
-        });
+        );
+
       }
     }
     event.stopPropagation();
   }
 
   mouseUp(event) {
-    this.mouse.releasedOn(this, event);
+    this.mouse.up(this, event);
     event.stopPropagation();
+  }
+
+  keyDown(event) {
+    if (event.key.toUpperCase() === 'A' && event.ctrlKey && !event.shiftKey && !event.altKey) {
+      event.stopPropagation();
+    }
   }
 
 }

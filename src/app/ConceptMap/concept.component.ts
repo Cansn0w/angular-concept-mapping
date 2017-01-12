@@ -69,6 +69,10 @@ export class ConceptComponent extends ElementComponent implements OnInit, OnDest
     }, 0);
   }
 
+  @HostListener('keydown', ['$event']) keyDown(event) {
+    super.keyDown(event);
+  }
+
   @HostListener('dblclick', ['$event']) doubleClick(event) {
     super.doubleClick(event);
   }

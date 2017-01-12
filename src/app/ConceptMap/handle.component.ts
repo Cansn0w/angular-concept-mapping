@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, DoCheck } from '@angular/core';
 
 import { Concept, ConceptMap, Proposition } from './conceptmap.types';
-import { Task, MouseService  } from './mouse.service';
+import { MouseService  } from './mouse.service';
 import { ConceptComponent } from './concept.component';
 
 import { ie } from './etc';
@@ -40,23 +40,21 @@ export class HandleComponent implements DoCheck, OnChanges {
   }
 
   ngDoCheck() {
-    // update handle position after the concept has updated its height.
-    setTimeout(() => {
-      // check if the belonging concept moved and update position if needed
-      if (
-        this.from.concept.x !== this.conceptPosition.x
-        ||
-        this.from.concept.y !== this.conceptPosition.y
-        ||
-        this.from.height !== this.conceptPosition.height
-      ) {
-        this.conceptPosition.x = this.from.concept.x;
-        this.conceptPosition.y = this.from.concept.y;
-        this.conceptPosition.height = this.from.height;
-        this.x = this.from.concept.x;
-        this.y = this.from.concept.y - this.from.height / 2 - 16;
-      }
-    }, 0);
+    // fixme: this check happens before the belonging concept change height, and can only capture the change in the next check.
+    // check if the belonging concept moved and update position if needed
+    if (
+      this.from.concept.x !== this.conceptPosition.x
+      ||
+      this.from.concept.y !== this.conceptPosition.y
+      ||
+      this.from.height !== this.conceptPosition.height
+    ) {
+      this.conceptPosition.x = this.from.concept.x;
+      this.conceptPosition.y = this.from.concept.y;
+      this.conceptPosition.height = this.from.height;
+      this.x = this.from.concept.x;
+      this.y = this.from.concept.y - this.from.height / 2 - 16;
+    }
   }
 
   createProposition(from: Concept, to: Concept) {
@@ -77,29 +75,25 @@ export class HandleComponent implements DoCheck, OnChanges {
   }
 
   mouseDown(event) {
-    this.mouse.pressedOn(this, event);
+    this.mouse.down(this, event);
     if (event.which === 1) {
-      let dragTask = new Task(this.mouse, 'mousemove', (e, unregister) => {
-        this.dragged = true;
-        this.x = this.mouse.position.x;
-        this.y = this.mouse.position.y;
-      });
-
-      new Task(this.mouse, 'mouseup', (e, unregister) => {
-        if (e.which === 1)  {
-          setTimeout(() => {
-            // todo - replace this error prone structure
-            if (this.mouse.state[1].target && this.mouse.state[1].target.concept) {
-              this.createProposition(this.from.concept, this.mouse.state[1].target.concept);
+      this.mouse.drag(
+        e => {
+          this.dragged = true;
+          this.x = this.mouse.position.x;
+          this.y = this.mouse.position.y;
+        },
+        e => {
+          if (e.browserEvent.which === 1) {
+            if (e.component.concept) {
+              this.createProposition(this.from.concept, e.component.concept);
             }
             this.dragged = false;
             this.x = this.from.concept.x;
             this.y = this.from.concept.y - this.from.height / 2 - 16;
-            dragTask.unRegister();
-            unregister();
-          }, 0);
+          }
         }
-      });
+      );
     }
     event.stopPropagation();
   }

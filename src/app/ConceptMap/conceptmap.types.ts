@@ -53,14 +53,21 @@ export class ConceptMap {
   }
 
   removeProposition(prop: Proposition) {
-    this.propositions.splice(this.propositions.indexOf(prop), 1);
+    let index = this.propositions.indexOf(prop);
+    if (index > -1) {
+      this.propositions.splice(index, 1);
+    }
   }
 
   /**
    * Remove a concept and all propositions that links to and from it.
    */
   removeConcept(concept: Concept) {
-    this.concepts.splice(this.concepts.indexOf(concept), 1);
+    let index = this.concepts.indexOf(concept);
+    if (index === -1) {
+      return;
+    }
+    this.concepts.splice(index, 1);
     let toDelete = [];
     for (let p of this.propositions) {
       if (p.from === concept || p.to === concept) {

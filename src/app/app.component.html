@@ -1,2 +1,10 @@
+<!-- todo: get a nicer menubar -->
+<span class="prevent-select" style="position: fixed; top: 0; left: 0; z-index: 10; width: 100%; padding: 4px 0px; background-color: lightgrey;">
+  <button title="Control-A" (click)="cmap.selectAll()">Select All</button>
+  <button title="Delete" (click)="cmap.deleteSelected()">Delete selected</button>
+  <button title="Export this map to a json file" (click)="export()">export</button>
+  <input type="file" title="Import a map from a json file" accept=".json" (change)='import($event)'>
+</span>
+
 <concept-map></concept-map>
 <div *ngIf="helpText" class="help-text" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">Double click to create a concept</div>

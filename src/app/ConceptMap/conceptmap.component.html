@@ -11,8 +11,3 @@
 <cm-handle *ngIf="getSingleSelection" [from]="getSingleSelection"></cm-handle>
 
 <div *ngIf="rubberband" id="rubber-band" [style.top.px] = "rubberband.top" [style.left.px] = "rubberband.left" [style.width.px] = "rubberband.width" [style.height.px] = "rubberband.height"></div>
-
-<div class="prevent-select" style="position: absolute; z-index: 10; width: 100%; padding: 4px 0px; background-color: lightgrey;">
-  <button (click)="export()">export</button>
-  <input type="file" accept=".json" (change)='import($event)'>
-</div>
