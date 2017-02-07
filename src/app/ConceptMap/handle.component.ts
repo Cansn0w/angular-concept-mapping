@@ -40,7 +40,6 @@ export class HandleComponent implements DoCheck, OnChanges {
   }
 
   ngDoCheck() {
-    // fixme: this check happens before the belonging concept change height, and can only capture the change in the next check.
     // check if the belonging concept moved and update position if needed
     if (
       this.from.concept.x !== this.conceptPosition.x

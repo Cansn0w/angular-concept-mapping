@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 
+import { ConceptComponent } from './concept.component';
+import { PropositionComponent } from './proposition.component';
+
 /**
  * Class implementing this interface will be managed by selection service and get notified on selecting and deselecting
  */
 export interface Selectable {
-  selected: boolean;  // the service will be managing selected state, so objects should only read from this property.
   select(): void;
   deselect(): void;
 }
@@ -14,51 +16,49 @@ export interface Selectable {
  */
 @Injectable()
 export class SelectionService {
-  selected: Selectable[] = [];
+  selectedConceptComponent: ConceptComponent[] = [];
+  selectedPropositionComponent: PropositionComponent[] = [];
 
-  /**
-   * Select the object and deselect the rest.
-   * similar to a clear followed by an add but will not notify the object if its already selected.
-   */
-  select(obj: Selectable) {
-    let index = this.selected.indexOf(obj);
-    if (index === -1) {
-      this.clear();
-      this.add(obj);
-    } else {
-      this.selected.splice(index, 1);
-      this.clear();
-      this.selected.push(obj);
+  addConceptComponent(component: ConceptComponent) {
+    if (this.selectedConceptComponent.indexOf(component) === -1) {
+      this.selectedConceptComponent.push(component);
+      component.select();
     }
   }
 
-  add(obj: Selectable) {
-    if (!obj.selected) {
-      this.selected.push(obj);
-      obj.selected = true;
-      obj.select();
+  addPropositionComponent(component: PropositionComponent) {
+    if (this.selectedPropositionComponent.indexOf(component) === -1) {
+      this.selectedPropositionComponent.push(component);
+      component.select();
     }
   }
 
-  remove(obj: Selectable) {
-    let index = this.selected.indexOf(obj);
+  removeConceptComponent(component: ConceptComponent) {
+    let index = this.selectedConceptComponent.indexOf(component);
     if (index !== -1) {
-      this.selected.splice(index, 1);
-      obj.selected = false;
-      obj.deselect();
+      this.selectedConceptComponent.splice(index, 1);
+      component.deselect();
+    }
+  }
+
+  removePropositionComponent(component: PropositionComponent) {
+    let index = this.selectedPropositionComponent.indexOf(component);
+    if (index !== -1) {
+      this.selectedPropositionComponent.splice(index, 1);
+      component.deselect();
     }
   }
 
   clear() {
-    for (let obj of this.selected) {
-      obj.selected = false;
-      obj.deselect();
+    for (let c of this.selectedConceptComponent) {
+      c.deselect();
     }
-    this.selected = [];
+    for (let c of this.selectedPropositionComponent) {
+      c.deselect();
+    }
+    this.selectedPropositionComponent = [];
+    this.selectedConceptComponent = [];
   }
 
-  isEmpty() {
-    return this.selected.length === 0;
-  }
 }
 

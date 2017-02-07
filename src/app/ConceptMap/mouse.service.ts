@@ -64,7 +64,7 @@ export class MouseService {
   /**
    * Subscribe to drag operation
    * Should be called after a mouse down event
-   * OnDrag callback will be executed on every mouse move, and OnDragEnd call beck will be executed on mouse up.
+   * OnDrag callback will be executed on every mouse move, and OnDragEnd will be executed on mouse up.
    */
   drag(onDrag: (mouseEvent: MouseEvent) => void, onDragEnd: (mouseEvent: MouseEvent) => void) {
     let mouseMoveSub = this.mouseMoveEvents.subscribe(onDrag);

@@ -1,9 +1,8 @@
 import { Component, Input, HostListener, HostBinding, ElementRef, OnInit, OnDestroy } from '@angular/core';
 
 import { Concept } from './conceptmap.types';
-import { ElementComponent } from './element.component';
 import { MouseService  } from './mouse.service';
-import { SelectionService } from './selection.service';
+import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
 
 /**
@@ -13,7 +12,7 @@ import { ComponentManager } from './componentmanager.service';
   selector: 'cm-concept',
   template: '',
 })
-export class ConceptComponent extends ElementComponent implements OnInit, OnDestroy {
+export class ConceptComponent implements OnInit, OnDestroy, Selectable {
 
   @Input() concept: Concept;
 
@@ -28,9 +27,7 @@ export class ConceptComponent extends ElementComponent implements OnInit, OnDest
     protected mouse: MouseService,
     protected manager: ComponentManager,
     protected element: ElementRef
-  ) {
-    super(selection, mouse, manager);
-  }
+  ) { }
 
   get height() {
     return this.element.nativeElement.offsetHeight;
@@ -45,7 +42,8 @@ export class ConceptComponent extends ElementComponent implements OnInit, OnDest
     // get focus on creation
     if (!this.concept.text) {
       window.setTimeout(() => {
-        this.selection.select(this);
+        this.selection.clear();
+        this.selection.addConceptComponent(this);
         this.enableEdit();
       }, 0);
     }
@@ -55,10 +53,21 @@ export class ConceptComponent extends ElementComponent implements OnInit, OnDest
     this.manager.removeConceptComponent(this);
   }
 
-  enableEdit() {
-    super.enableEdit();
+  select() {
+    this.selected = true;
+  }
 
-    // todo - replace with more portable implemetation.
+  deselect(): void {
+    this.selected = false;
+    if (this.editable) {
+      this.disableEdit();
+    }
+  }
+
+  enableEdit() {
+    this.editable = true;
+    this.preventSelect = false;
+
     window.setTimeout(() => {
       this.element.nativeElement.focus();
       let range = document.createRange();
@@ -69,20 +78,92 @@ export class ConceptComponent extends ElementComponent implements OnInit, OnDest
     }, 0);
   }
 
-  @HostListener('keydown', ['$event']) keyDown(event) {
-    super.keyDown(event);
-  }
-
-  @HostListener('dblclick', ['$event']) doubleClick(event) {
-    super.doubleClick(event);
+  disableEdit() {
+    this.editable = false;
+    this.preventSelect = true;
   }
 
   @HostListener('mousedown', ['$event']) mouseDown(event) {
-    super.mouseDown(event);
+    this.mouse.down(this, event);
+    if (event.which === 1) {
+      if (!this.editable /* disable drag while been editable */) {
+
+        if (event.ctrlKey || event.shiftKey) {
+          if (this.selected) {
+            let dragged = false;
+            this.mouse.drag(
+              e => dragged = true,
+              e => {
+                if (e.browserEvent.which === 1 && !dragged) {
+                  this.selection.removeConceptComponent(this);
+                }
+              }
+            );
+          } else {
+            this.selection.addConceptComponent(this);
+          }
+        } else {
+          if (this.selected) {
+            let dragged = false;
+            this.mouse.drag(
+              e => dragged = true,
+              e => {
+                if (e.browserEvent.which === 1 && !dragged) {
+                  this.selection.clear();
+                  this.selection.addConceptComponent(this);
+                }
+              }
+            );
+          } else {
+            this.selection.clear();
+            this.selection.addConceptComponent(this);
+          }
+        }
+
+        this.mouse.drag(
+          e => {
+            this.mouse.cursorStyle = 'move';
+            for (let c of this.selection.selectedConceptComponent) {
+              c.concept.x += e.browserEvent.movementX;
+              c.concept.y += e.browserEvent.movementY;
+            }
+          },
+          e => {
+            if (e.browserEvent.which === 1)  {
+              this.mouse.cursorStyle = 'default';
+            }
+          }
+        );
+
+      }
+    }
+    event.stopPropagation();
   }
 
   @HostListener('mouseup', ['$event']) mouseUp(event) {
-    super.mouseUp(event);
+    this.mouse.up(this, event);
+    event.stopPropagation();
+  }
+
+  @HostListener('dblclick', ['$event']) doubleClick(event) {
+    event.stopPropagation();
+    // when not selecting
+    if (!event.ctrlKey && !event.shiftKey) {
+      if (!this.editable) {
+        this.enableEdit();
+      }
+    }
+  }
+
+  @HostListener('keydown', ['$event']) keyDown(event) {
+    if (
+        (event.ctrlKey && !event.shiftKey && !event.altKey && (event.key ? event.key.toUpperCase() === 'A' : event.which === 65))
+        ||
+        (event.key === 'Delete' || event.key === 'Del' || event.which === 46)
+      ) {
+      event.stopPropagation();
+    }
+    setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.
   }
 
 }

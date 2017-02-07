@@ -56,11 +56,8 @@ export class ConceptMapComponent implements DoCheck {
    * This method will return a single concept component if it's the only selected one, otherwise undefined
    */
   get getSingleSelection() {
-    if (this.selection.selected.length === 1) {
-      let c: any = this.selection.selected[0];
-      if (c.concept) {
-        return c;
-      }
+    if (this.selection.selectedConceptComponent.length === 1) {
+      return this.selection.selectedConceptComponent[0];
     }
     return undefined;
   }
@@ -91,7 +88,7 @@ export class ConceptMapComponent implements DoCheck {
   selectAll() {
     this.selection.clear();
     for (let concept of this.manager.conceptComponents) {
-      this.selection.add(concept);
+      this.selection.addConceptComponent(concept);
     }
   }
 
@@ -132,16 +129,16 @@ export class ConceptMapComponent implements DoCheck {
             // select components
             for (let c of this.manager.conceptComponents) {
               if (this.rubberband.include(c.concept.x, c.concept.y)) {
-                this.selection.add(c);
+                this.selection.addConceptComponent(c);
               } else {
-                this.selection.remove(c);
+                this.selection.removeConceptComponent(c);
               }
             }
             for (let p of this.manager.propositionComponents) {
-              if (this.rubberband.include(p.x, p.y)) {
-                this.selection.add(p);
+              if (this.rubberband.include(p.labelX, p.labelY)) {
+                this.selection.addPropositionComponent(p);
               } else {
-                this.selection.remove(p);
+                this.selection.removePropositionComponent(p);
               }
             }
           },

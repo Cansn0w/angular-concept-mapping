@@ -43,16 +43,16 @@ export class AppComponent {
 
   @HostListener('window:keydown', ['$event']) keyDown(event) {
     // DEL: delete
-    if (event.key === 'Delete' || event.key === 'Del') {
+    if (event.key === 'Delete' || event.key === 'Del' || event.which === 46) {
       this.cmap.deleteSelected();
     } else
     // Ctrl-A: select all
-    if (event.key.toUpperCase() === 'A' && event.ctrlKey && !event.shiftKey && !event.altKey) {
+    if ((event.key ? event.key.toUpperCase() === 'A' : event.which === 65) && event.ctrlKey && !event.shiftKey && !event.altKey) {
       this.cmap.selectAll();
       event.preventDefault();
     } else
     // Ctrl-S: export
-    if (event.key.toUpperCase() === 'S' && event.ctrlKey && !event.shiftKey && !event.altKey) {
+    if ((event.key ? event.key.toUpperCase() === 'S' : event.which === 83) && event.ctrlKey && !event.shiftKey && !event.altKey) {
       this.export();
       event.preventDefault();
     }
