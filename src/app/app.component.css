@@ -17,3 +17,17 @@ concept-map {
   cursor: default;
   pointer-events: none;
 }
+
+#menubar {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+
+  position: fixed;
+  cursor: default;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+}

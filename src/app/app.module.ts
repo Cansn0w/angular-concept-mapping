@@ -2,10 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
+
+import { ButtonModule, MenubarModule, DialogModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 
-import { ConceptMapModule } from './ConceptMap/conceptmap.module';
+import { ConceptMapModule } from './conceptmap/conceptmap.module';
 
 @NgModule({
   declarations: [
@@ -15,6 +18,11 @@ import { ConceptMapModule } from './ConceptMap/conceptmap.module';
     BrowserModule,
     FormsModule,
     HttpModule,
+    RouterModule.forRoot([]),
+
+    ButtonModule,
+    MenubarModule,
+    DialogModule,
 
     ConceptMapModule
   ],

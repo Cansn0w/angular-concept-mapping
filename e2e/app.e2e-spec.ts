@@ -43,11 +43,9 @@ describe('ConceptMap App', function() {
     expect(element(by.css('cm-concept')).getAttribute('class')).toContain('selected');
   });
 
-  // Neither dragAndDrop nor mousemove triggers mousemove event and therefore cannot move the target.
-  xit('concept should move when dragged', () => {
+  it('concept should move when dragged', () => {
     let movement = new Point(200, 200);
 
-    // todo - find alternative method that can actually drag a concept
     //browser.actions().dragAndDrop(element(by.css('cm-concept')).getWebElement(), movement).perform();
     browser.actions().mouseMove(page.points[0]).mouseDown().mouseMove(movement).mouseUp().perform();
 
