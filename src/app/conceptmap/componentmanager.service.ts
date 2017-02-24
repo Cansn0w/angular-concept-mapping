@@ -10,28 +10,26 @@ import { Concept } from './conceptmap.types';
  */
 @Injectable()
 export class ComponentManager {
-  conceptComponents: ConceptComponent[] = [];
-  propositionComponents: PropositionComponent[] = [];
+  conceptComponents = new Set<ConceptComponent>();
+  propositionComponents = new Set<PropositionComponent>();
 
   addConceptComponent(component: ConceptComponent) {
-    this.conceptComponents.push(component);
+    this.conceptComponents.add(component);
   }
 
   getConceptComponent(concept: Concept) {
-    return this.conceptComponents[this.conceptComponents.findIndex((element) => {
-      return element.concept === concept;
-    })];
+    return Array.from(this.conceptComponents).find(c => c.concept === concept);
   }
 
   removeConceptComponent(component: ConceptComponent) {
-    this.conceptComponents.splice(this.conceptComponents.indexOf(component), 1);
+    this.conceptComponents.delete(component);
   }
 
   addPropositionComponent(component: PropositionComponent) {
-    this.propositionComponents.push(component);
+    this.propositionComponents.add(component);
   }
 
   removePropositionComponent(component: PropositionComponent) {
-    this.propositionComponents.splice(this.propositionComponents.indexOf(component), 1);
+    this.propositionComponents.delete(component);
   }
 }

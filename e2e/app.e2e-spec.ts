@@ -5,7 +5,7 @@ import { browser, element, by, Key } from 'protractor';
 
 describe('ConceptMap App', function() {
 
-  let page =  new ConceptMapPage();
+  let page = new ConceptMapPage();
 
   it('should display a help message', () => {
     page.navigateTo();
@@ -44,16 +44,14 @@ describe('ConceptMap App', function() {
   });
 
   it('concept should move when dragged', () => {
-    let movement = new Point(200, 200);
+    let newPos = new Point(page.points[0].x + 200, page.points[0].y + 200);
 
-    //browser.actions().dragAndDrop(element(by.css('cm-concept')).getWebElement(), movement).perform();
-    browser.actions().mouseMove(page.points[0]).mouseDown().mouseMove(movement).mouseUp().perform();
+    page.drag(page.points[0], newPos);
 
-    expect(element(by.css('cm-concept')).getCssValue('left')).toEqual(page.points[0].x + movement.x + 'px');
-    expect(element(by.css('cm-concept')).getCssValue('top')).toEqual(page.points[0].y + movement.y + 'px');
+    expect(element(by.css('cm-concept')).getCssValue('left')).toEqual(newPos.x + 'px');
+    expect(element(by.css('cm-concept')).getCssValue('top')).toEqual(newPos.y + 'px');
 
-    //browser.actions().dragAndDrop(element(by.css('cm-concept')).getWebElement(), movement.opposite()).perform();
-    browser.actions().mouseDown().mouseMove(movement.opposite()).mouseUp().mouseMove(page.points[0].opposite()).perform();
+    page.drag(newPos, page.points[0]);
 
     expect(element(by.css('cm-concept')).getCssValue('left')).toEqual(page.points[0].x + 'px');
     expect(element(by.css('cm-concept')).getCssValue('top')).toEqual(page.points[0].y + 'px');
@@ -126,6 +124,34 @@ describe('ConceptMap App', function() {
     expect(element.all(by.css('cm-concept')).count()).toEqual(page.points.length);  // and don't create new concepts
   });
 
-  // todo - add dragging text when possible
+  it('drag handle can create proposition', () => {
+    page.click(page.points[0]);
+    page.drag(page.getHandle(page.points[0]), page.points[1]);
+    expect(element.all(by.css('cm-proposition')).count()).toEqual(1);
+  });
+
+  it('newly created proposition should accept input', () => {
+    let testString = 'testing :-)';
+    page.click(page.points[0]);
+    page.drag(page.getHandle(page.points[0]), page.points[2]);
+    browser.actions().sendKeys(testString).perform();
+    expect(element(by.css('div.cm-label.selected')).getText()).toEqual(testString);
+  });
+
+  it('should not allow proposition to repeat', () => {
+    expect(element.all(by.css('cm-proposition')).count()).toEqual(2);
+    page.click(page.points[0]);
+    page.drag(page.getHandle(page.points[0]), page.points[1]);
+    page.click(page.points[1]);
+    page.drag(page.getHandle(page.points[1]), page.points[0]);
+    expect(element.all(by.css('cm-proposition')).count()).toEqual(2);
+  })
+
+  it('deleting concept also deletes dependent propositions', () => {
+    expect(element.all(by.css('cm-proposition')).count()).toEqual(2);
+    page.click(page.points[0]);
+    browser.actions().sendKeys(Key.DELETE).perform();
+    expect(element.all(by.css('cm-proposition')).count()).toEqual(0);
+  })
 
 });

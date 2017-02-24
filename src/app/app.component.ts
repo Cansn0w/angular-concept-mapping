@@ -3,7 +3,7 @@ import { ConceptMapComponent } from './conceptmap/conceptmap.component';
 
 import { MenuItem } from 'primeng/primeng';
 
-import { ie } from './conceptmap/etc';
+import { ie, keyMatch } from './conceptmap/etc';
 
 @Component({
   selector: 'app-root',
@@ -46,11 +46,15 @@ export class AppComponent implements DoCheck {
     _file: undefined,
     visible: false,
     chooseFile: (event) => {
-      let reader = new FileReader();
-      reader.onloadend = (e) => {
-        this.importTool._file = reader.result;
-      };
-      reader.readAsText(event.target.files[0]);
+      if (event.target.files[0]) {
+        let reader = new FileReader();
+        reader.onloadend = (e) => {
+          this.importTool._file = reader.result;
+        };
+        reader.readAsText(event.target.files[0]);
+      } else {
+        this.importTool._file = undefined;
+      }
     },
     loadFile: () => {
       try {
@@ -65,14 +69,14 @@ export class AppComponent implements DoCheck {
   };
 
   get isEmpty() {
-    return this.cmap.cmap.concepts.length === 0;
+    return this.cmap.cmap.concepts.size === 0;
   }
 
   ngDoCheck() {
     this.menu[0].items[1].disabled = this.isEmpty;
     this.menu[1].items[0].disabled = this.isEmpty;
-    this.menu[1].items[1].disabled = this.cmap.selection.selectedConceptComponent.length === 0 &&
-    this.cmap.selection.selectedPropositionComponent.length === 0;
+    this.menu[1].items[1].disabled = this.cmap.selection.selectedConceptComponent.size === 0 &&
+    this.cmap.selection.selectedPropositionComponent.size === 0;
   }
 
   export() {
@@ -99,17 +103,17 @@ export class AppComponent implements DoCheck {
       this.cmap.deleteSelected();
     } else
     // Ctrl-A: select all
-    if ((event.key ? event.key.toUpperCase() === 'A' : event.which === 65) && event.ctrlKey && !event.shiftKey && !event.altKey) {
+    if (keyMatch(event, 'A', {ctrl: true})) {
       this.cmap.selectAll();
       event.preventDefault();
     } else
     // Ctrl-S: export
-    if ((event.key ? event.key.toUpperCase() === 'S' : event.which === 83) && event.ctrlKey && !event.shiftKey && !event.altKey) {
+    if (keyMatch(event, 'S', {ctrl: true})) {
       this.export();
       event.preventDefault();
     }
     // Ctrl-O: open
-    if ((event.key ? event.key.toUpperCase() === 'O' : event.which === 83) && event.ctrlKey && !event.shiftKey && !event.altKey) {
+    if (keyMatch(event, 'O', {ctrl: true})) {
       this.importTool.visible = true;
       event.preventDefault();
     }

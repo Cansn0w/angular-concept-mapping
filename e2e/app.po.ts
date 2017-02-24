@@ -37,6 +37,15 @@ export class ConceptMapPage {
     browser.actions().mouseMove(point).click().mouseMove(point.opposite()).perform();
   }
 
+  drag(from: Point, to: Point) {
+    let movement = new Point(to.x - from.x, to.y - from.y);
+    browser.actions().mouseMove(from).mouseDown().mouseMove(movement).mouseUp().mouseMove(movement.opposite()).mouseMove(from.opposite()).perform();
+  }
+
+  getHandle(point: Point) {
+    return new Point(point.x, point.y - 25);
+  }
+
   getHelpText() {
     return element(by.xpath('//app-root/div'));
   }

@@ -57,13 +57,9 @@ export class HandleComponent implements DoCheck, OnChanges {
   }
 
   createProposition(from: Concept, to: Concept) {
-    // Check if there is already a proposition
-    for (let i of this.cmap.propositions) {
-      if (i.from === from && i.to === to || i.from === to && i.to === from) {
-        return;
-      }
+    if (!Array.from(this.cmap.propositions).some(p => p.from === from && p.to === to || p.from === to && p.to === from)) {
+      this.cmap.propositions.add(new Proposition('', from, to));
     }
-    this.cmap.propositions.push(new Proposition('', from, to));  // todo - replace stub
   }
 
   linePath() {

@@ -16,48 +16,36 @@ export interface Selectable {
  */
 @Injectable()
 export class SelectionService {
-  selectedConceptComponent: ConceptComponent[] = [];
-  selectedPropositionComponent: PropositionComponent[] = [];
+  selectedConceptComponent = new Set<ConceptComponent>();
+  selectedPropositionComponent = new Set<PropositionComponent>();
 
   addConceptComponent(component: ConceptComponent) {
-    if (this.selectedConceptComponent.indexOf(component) === -1) {
-      this.selectedConceptComponent.push(component);
-      component.select();
-    }
+    this.selectedConceptComponent.add(component);
+    component.select();
   }
 
   addPropositionComponent(component: PropositionComponent) {
-    if (this.selectedPropositionComponent.indexOf(component) === -1) {
-      this.selectedPropositionComponent.push(component);
-      component.select();
-    }
+    this.selectedPropositionComponent.add(component);
+    component.select();
   }
 
   removeConceptComponent(component: ConceptComponent) {
-    let index = this.selectedConceptComponent.indexOf(component);
-    if (index !== -1) {
-      this.selectedConceptComponent.splice(index, 1);
+    if (this.selectedConceptComponent.delete(component)) {
       component.deselect();
     }
   }
 
   removePropositionComponent(component: PropositionComponent) {
-    let index = this.selectedPropositionComponent.indexOf(component);
-    if (index !== -1) {
-      this.selectedPropositionComponent.splice(index, 1);
+    if (this.selectedPropositionComponent.delete(component)) {
       component.deselect();
     }
   }
 
   clear() {
-    for (let c of this.selectedConceptComponent) {
-      c.deselect();
-    }
-    for (let c of this.selectedPropositionComponent) {
-      c.deselect();
-    }
-    this.selectedPropositionComponent = [];
-    this.selectedConceptComponent = [];
+    this.selectedConceptComponent.forEach(c => c.deselect());
+    this.selectedPropositionComponent.forEach(c => c.deselect());
+    this.selectedPropositionComponent.clear();
+    this.selectedConceptComponent.clear();
   }
 
 }

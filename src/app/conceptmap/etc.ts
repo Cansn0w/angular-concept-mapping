@@ -19,3 +19,28 @@ export const ie = (function() {
   let ua = window.navigator.userAgent;
   return (ua.indexOf('MSIE ') > 0) || (ua.indexOf('Trident/') > 0);
 })();
+
+interface ModifierKey {
+  ctrl?: boolean;
+  shift?: boolean;
+  alt?: boolean;
+  meta?: boolean;
+}
+
+let defaultModifiers = {
+  ctrl: false,
+  shift: false,
+  alt: false,
+  meta: false,
+};
+
+/**
+ * Function used to match keyboard events
+ */
+export function keyMatch(keyboardEvent, key: string, modifiers: ModifierKey) {
+  modifiers = Object.assign(defaultModifiers, modifiers);
+  key = key.toUpperCase();
+  return (keyboardEvent.key ? keyboardEvent.key.toUpperCase() === key : keyboardEvent.which === key.charCodeAt(0)) &&
+  keyboardEvent.ctrlKey === modifiers.ctrl && keyboardEvent.shiftKey === modifiers.shift &&
+  keyboardEvent.altKey === modifiers.alt && keyboardEvent.metaKey === modifiers.meta;
+}

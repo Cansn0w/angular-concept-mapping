@@ -1,6 +1,6 @@
 import { Component, HostListener, HostBinding, DoCheck } from '@angular/core';
 
-import { Concept, ConceptMap } from './conceptmap.types';
+import { ConceptMap } from './conceptmap.types';
 import { MouseService } from './mouse.service';
 import { SelectionService } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
@@ -56,8 +56,8 @@ export class ConceptMapComponent implements DoCheck {
    * This method will return a single concept component if it's the only selected one, otherwise undefined
    */
   get getSingleSelection() {
-    if (this.selection.selectedConceptComponent.length === 1) {
-      return this.selection.selectedConceptComponent[0];
+    if (this.selection.selectedConceptComponent.size === 1 && this.selection.selectedPropositionComponent.size === 0) {
+      return this.selection.selectedConceptComponent.values().next().value;
     }
     return undefined;
   }
@@ -72,28 +72,18 @@ export class ConceptMapComponent implements DoCheck {
   }
 
   deleteSelected() {
-    for (let p of this.manager.propositionComponents) {
-      if (p.selected) {
-        this.cmap.removeProposition(p.proposition);
-      }
-    }
-    for (let c of this.manager.conceptComponents) {
-      if (c.selected) {
-        this.cmap.removeConcept(c.concept);
-      }
-    }
+    Array.from(this.manager.propositionComponents).filter(p => p.selected).forEach(p => this.cmap.removeProposition(p.proposition));
+    Array.from(this.manager.conceptComponents).filter(c => c.selected).forEach(c => this.cmap.removeConcept(c.concept));
     this.selection.clear();
   }
 
   selectAll() {
     this.selection.clear();
-    for (let concept of this.manager.conceptComponents) {
-      this.selection.addConceptComponent(concept);
-    }
+    this.manager.conceptComponents.forEach(concept => this.selection.addConceptComponent(concept));
   }
 
   @HostListener('dblclick', ['$event']) protected doubleClick(event) {
-    this.cmap.concepts.push(new Concept('', event.clientX, event.clientY));
+    this.cmap.addConcept('', event.clientX, event.clientY);
   }
 
   @HostListener('mousedown', ['$event']) protected mouseDown(event) {
@@ -103,10 +93,10 @@ export class ConceptMapComponent implements DoCheck {
         this.mouse.drag(
           e => {
             this.mouse.cursorStyle = 'move';
-            for (let c of this.cmap.concepts) {
+            this.cmap.concepts.forEach(c => {
               c.x += e.browserEvent.movementX;
               c.y += e.browserEvent.movementY;
-            }
+            });
           },
           e => {
             if (e.browserEvent.which === 1)  {
@@ -127,20 +117,20 @@ export class ConceptMapComponent implements DoCheck {
             this.rubberband.width = Math.max(this.rubberband.x, this.mouse.position.x) - this.rubberband.left;
             this.rubberband.height = Math.max(this.rubberband.y, this.mouse.position.y) - this.rubberband.top;
             // select components
-            for (let c of this.manager.conceptComponents) {
+            this.manager.conceptComponents.forEach(c => {
               if (this.rubberband.include(c.concept.x, c.concept.y)) {
                 this.selection.addConceptComponent(c);
               } else {
                 this.selection.removeConceptComponent(c);
               }
-            }
-            for (let p of this.manager.propositionComponents) {
+            });
+            this.manager.propositionComponents.forEach(p => {
               if (this.rubberband.include(p.labelX, p.labelY)) {
                 this.selection.addPropositionComponent(p);
               } else {
                 this.selection.removePropositionComponent(p);
               }
-            }
+            });
           },
           e => {
             if (e.browserEvent.which === 1)  {

@@ -6,7 +6,7 @@ import { MouseService } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
 
-import { ie } from './etc';
+import { ie, keyMatch } from './etc';
 
 /**
  * Function used to calculate how proposition lines are to be clipped by concepts
@@ -241,12 +241,12 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
         this.mouse.drag(
           e => {
             this.mouse.cursorStyle = 'move';
-            for (let c of this.selection.selectedConceptComponent) {
+            this.selection.selectedConceptComponent.forEach((c) => {
               if (c !== this.from && c !== this.to) {
                 c.concept.x += e.browserEvent.movementX;
                 c.concept.y += e.browserEvent.movementY;
               }
-            }
+            });
             for (let c of [this.from, this.to]) {
               c.concept.x += e.browserEvent.movementX;
               c.concept.y += e.browserEvent.movementY;
@@ -271,11 +271,7 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
   }
 
   keyDown(event) {
-    if (
-        (event.ctrlKey && !event.shiftKey && !event.altKey && (event.key ? event.key.toUpperCase() === 'A' : event.which === 65))
-        ||
-        (event.key === 'Delete' || event.key === 'Del' || event.which === 46)
-      ) {
+    if (keyMatch(event, 'A', {ctrl: true}) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
       event.stopPropagation();
     }
     setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.

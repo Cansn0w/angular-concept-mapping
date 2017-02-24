@@ -4,6 +4,7 @@ import { Concept } from './conceptmap.types';
 import { MouseService  } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
+import { keyMatch } from './etc';
 
 /**
  * Concept component. Define the concept html element.
@@ -123,10 +124,10 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
         this.mouse.drag(
           e => {
             this.mouse.cursorStyle = 'move';
-            for (let c of this.selection.selectedConceptComponent) {
+            this.selection.selectedConceptComponent.forEach((c) => {
               c.concept.x += e.browserEvent.movementX;
               c.concept.y += e.browserEvent.movementY;
-            }
+            });
           },
           e => {
             if (e.browserEvent.which === 1)  {
@@ -156,13 +157,10 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
   }
 
   @HostListener('keydown', ['$event']) keyDown(event) {
-    if (
-        (event.ctrlKey && !event.shiftKey && !event.altKey && (event.key ? event.key.toUpperCase() === 'A' : event.which === 65))
-        ||
-        (event.key === 'Delete' || event.key === 'Del' || event.which === 46)
-      ) {
+    if (keyMatch(event, 'A', {ctrl: true}) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
       event.stopPropagation();
     }
+    console.log(event);
     setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.
   }
 
