@@ -16,7 +16,7 @@
   </defs>
 </svg>
 
-<cm-concept *ngFor="let c of cmap.concepts" [concept]="c" [style.top.px]="c.y" [style.left.px]="c.x" [innerHTML]="c.text" (blur)="c.text=$event.target.innerHTML"></cm-concept>
+<cm-concept *ngFor="let c of cmap.concepts" [concept]="c" [style.top.px]="c.y" [style.left.px]="c.x" cmContenteditableModel="c.text"></cm-concept>
 <cm-proposition *ngFor="let p of cmap.propositions" [proposition]="p"></cm-proposition>
 <cm-handle *ngIf="getSingleSelection" [from]="getSingleSelection"></cm-handle>
 

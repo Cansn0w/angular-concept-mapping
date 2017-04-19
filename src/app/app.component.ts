@@ -6,7 +6,7 @@ import { MenuItem } from 'primeng/primeng';
 import { ie, keyMatch } from './conceptmap/etc';
 
 @Component({
-  selector: 'app-root',
+  selector: 'cm-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -47,7 +47,7 @@ export class AppComponent implements DoCheck {
     visible: false,
     chooseFile: (event) => {
       if (event.target.files[0]) {
-        let reader = new FileReader();
+        const reader = new FileReader();
         reader.onloadend = (e) => {
           this.importTool._file = reader.result;
         };
@@ -85,7 +85,7 @@ export class AppComponent implements DoCheck {
     } else {
       // Create a downloadable file through data URI
       // reference http://stackoverflow.com/a/18197341
-      let a = document.createElement('a');
+      const a = document.createElement('a');
       a.style.display = 'none';
       a.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.cmap.export()));
       a.setAttribute('download', 'ConceptMap.json');

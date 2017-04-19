@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ButtonModule, MenubarModule, DialogModule } from 'primeng/primeng';
 
@@ -19,6 +20,7 @@ import { ConceptMapModule } from './conceptmap/conceptmap.module';
     FormsModule,
     HttpModule,
     RouterModule.forRoot([]),
+    NoopAnimationsModule,
 
     ButtonModule,
     MenubarModule,

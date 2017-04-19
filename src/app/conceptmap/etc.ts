@@ -16,7 +16,7 @@ export const ie = (function() {
   // Edge 13
   // ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586';
 
-  let ua = window.navigator.userAgent;
+  const ua = window.navigator.userAgent;
   return (ua.indexOf('MSIE ') > 0) || (ua.indexOf('Trident/') > 0);
 })();
 
@@ -27,7 +27,7 @@ interface ModifierKey {
   meta?: boolean;
 }
 
-let defaultModifiers = {
+const defaultModifiers = {
   ctrl: false,
   shift: false,
   alt: false,

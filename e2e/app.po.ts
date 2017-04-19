@@ -23,7 +23,7 @@ export class ConceptMapPage {
     new Point(400, 180),
     new Point(180, 400),
     new Point(400, 400),
-  ]
+  ];
 
   navigateTo() {
     return browser.get('/');
@@ -38,8 +38,10 @@ export class ConceptMapPage {
   }
 
   drag(from: Point, to: Point) {
-    let movement = new Point(to.x - from.x, to.y - from.y);
-    browser.actions().mouseMove(from).mouseDown().mouseMove(movement).mouseUp().mouseMove(movement.opposite()).mouseMove(from.opposite()).perform();
+    const movement = new Point(to.x - from.x, to.y - from.y);
+    browser.actions()
+    .mouseMove(from).mouseDown().mouseMove(movement).mouseUp()
+    .mouseMove(movement.opposite()).mouseMove(from.opposite()).perform();
   }
 
   getHandle(point: Point) {
@@ -47,7 +49,7 @@ export class ConceptMapPage {
   }
 
   getHelpText() {
-    return element(by.xpath('//app-root/div'));
+    return element(by.xpath('//cm-root/div'));
   }
 
 }

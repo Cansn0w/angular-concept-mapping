@@ -31,13 +31,13 @@ class RubberBand {
  * This element contains a number of concept and propositon elements to create a concept map.
  */
 @Component({
-  selector: 'concept-map',
+  selector: 'cm-concept-map',
   templateUrl: './conceptmap.component.html',
   styleUrls: ['./conceptmap.component.css']
 })
 export class ConceptMapComponent implements DoCheck {
 
-  @HostBinding('style.cursor') protected cursorStyle: string = 'default';
+  @HostBinding('style.cursor') protected cursorStyle = 'default';
 
   rubberband: RubberBand;
 
@@ -89,7 +89,7 @@ export class ConceptMapComponent implements DoCheck {
   @HostListener('mousedown', ['$event']) protected mouseDown(event) {
     this.mouse.down(this, event);
     if (event.which === 1) {
-      if (event.ctrlKey) {
+      if (event.altKey) {
         this.mouse.drag(
           e => {
             this.mouse.cursorStyle = 'move';
@@ -105,7 +105,9 @@ export class ConceptMapComponent implements DoCheck {
           }
         );
       } else {
-        this.selection.clear();
+        if (!event.ctrlKey) {
+          this.selection.clear();
+        }
         this.mouse.drag(
           e => {
             // create rubber band if drag starts.
@@ -117,6 +119,7 @@ export class ConceptMapComponent implements DoCheck {
             this.rubberband.width = Math.max(this.rubberband.x, this.mouse.position.x) - this.rubberband.left;
             this.rubberband.height = Math.max(this.rubberband.y, this.mouse.position.y) - this.rubberband.top;
             // select components
+            // todo: better control-select operation
             this.manager.conceptComponents.forEach(c => {
               if (this.rubberband.include(c.concept.x, c.concept.y)) {
                 this.selection.addConceptComponent(c);

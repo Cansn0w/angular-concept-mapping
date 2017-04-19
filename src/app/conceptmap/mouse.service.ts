@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/first';
 
 /**
  * An event wrapper that also records the component emitted this event.
@@ -24,7 +25,7 @@ class MouseEvent {
 @Injectable()
 export class MouseService {
 
-  cursorStyle: string = 'default';
+  cursorStyle = 'default';
   position = {x: 0, y: 0};  // cursor position
 
   mouseMoveEvents = new Subject<MouseEvent>();
@@ -67,7 +68,7 @@ export class MouseService {
    * OnDrag callback will be executed on every mouse move, and OnDragEnd will be executed on mouse up.
    */
   drag(onDrag: (mouseEvent: MouseEvent) => void, onDragEnd: (mouseEvent: MouseEvent) => void) {
-    let mouseMoveSub = this.mouseMoveEvents.subscribe(onDrag);
+    const mouseMoveSub = this.mouseMoveEvents.subscribe(onDrag);
     this.mouseUpEvents.first().subscribe(
       event => {
         onDragEnd(event);

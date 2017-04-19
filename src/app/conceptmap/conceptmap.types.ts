@@ -61,8 +61,8 @@ export class ConceptMap {
    * Remove a concept and all propositions that links to and from it.
    */
   removeConcept(concept: Concept) {
-    for (let p of Array.from(this.propositions).filter(p => p.from === concept || p.to === concept)) {
-      this.removeProposition(p);
+    for (const prop of Array.from(this.propositions).filter(p => p.from === concept || p.to === concept)) {
+      this.removeProposition(prop);
     }
     this.concepts.delete(concept);
   }
@@ -72,14 +72,14 @@ export class ConceptMap {
    * will assign every concept with an id.
    */
   toJson() {
-    let map = {
+    const map = {
       concepts: [],
       propositions: []
     };
 
     // Efforts to avoid id collisions - not sure whether necessary :/
-    let ids = new Set<string>();
-    let conceptIDs = new Map<Concept, string>();
+    const ids = new Set<string>();
+    const conceptIDs = new Map<Concept, string>();
     this.concepts.forEach(c => {
       let id = this.getID();
       while (ids.has(id)) {
@@ -106,19 +106,19 @@ export class ConceptMap {
    * will overwrite current map if loaded successfully
    */
   parseJson(data: string) {
-    let map = JSON.parse(data);
+    const map = JSON.parse(data);
 
-    let concepts = new Set<Concept>();
-    let propositions = new Set<Proposition>();
+    const concepts = new Set<Concept>();
+    const propositions = new Set<Proposition>();
 
-    let lookup = {};
-    for (let c of map.concepts) {
-      let concept = new Concept(c.text, c.x, c.y);
+    const lookup = {};
+    for (const c of map.concepts) {
+      const concept = new Concept(c.text, c.x, c.y);
       lookup[c.id] = concept;
       concepts.add(concept);
     }
 
-    for (let p of map.propositions) {
+    for (const p of map.propositions) {
       propositions.add(new Proposition(p.text, lookup[p.from], lookup[p.to]));
     }
 

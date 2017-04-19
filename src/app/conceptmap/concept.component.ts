@@ -17,11 +17,11 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
 
   @Input() concept: Concept;
 
-  @HostBinding('class.selected') selected: boolean = false;
+  @HostBinding('class.selected') selected = false;
 
-  @HostBinding('class.prevent-select') preventSelect: boolean = true;
+  @HostBinding('class.prevent-select') preventSelect = true;
 
-  @HostBinding('attr.contenteditable') editable: boolean = false;
+  @HostBinding('attr.contenteditable') editable = false;
 
   constructor(
     protected selection: SelectionService,
@@ -71,9 +71,9 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
 
     window.setTimeout(() => {
       this.element.nativeElement.focus();
-      let range = document.createRange();
+      const range = document.createRange();
       range.selectNodeContents(this.element.nativeElement);
-      let sel = window.getSelection();
+      const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
     }, 0);
@@ -160,7 +160,6 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
     if (keyMatch(event, 'A', {ctrl: true}) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
       event.stopPropagation();
     }
-    console.log(event);
     setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.
   }
 

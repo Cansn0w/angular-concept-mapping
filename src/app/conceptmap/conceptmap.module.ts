@@ -9,6 +9,7 @@ import { MouseService  } from './mouse.service';
 import { SelectionService  } from './selection.service';
 import { ConceptMap } from './conceptmap.types';
 import { ComponentManager } from './componentmanager.service';
+import { ContenteditableDirective } from './contenteditable.directive';
 
 /**
  * ConceptMap module
@@ -18,7 +19,8 @@ import { ComponentManager } from './componentmanager.service';
     ConceptMapComponent,
     ConceptComponent,
     PropositionComponent,
-    HandleComponent
+    HandleComponent,
+    ContenteditableDirective
   ],
   imports: [
     BrowserModule

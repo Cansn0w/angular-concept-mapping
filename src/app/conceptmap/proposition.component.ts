@@ -13,8 +13,8 @@ import { ie, keyMatch } from './etc';
  */
 function rectangleClip(rectWidth, rectHeight, x, y): {x: number, y: number} {
 
-  let heightBound = rectHeight / 2;
-  let widthBound = rectWidth / 2;
+  const heightBound = rectHeight / 2;
+  const widthBound = rectWidth / 2;
   /*
     * The two condition below indecates the direction of the 'from' concept at the 'to' concept
     * which is needed to decide which edge of the 'to' concept should be used for clipping.
@@ -26,10 +26,10 @@ function rectangleClip(rectWidth, rectHeight, x, y): {x: number, y: number} {
     *              +------------+
     *             /  true, false \
     */
-  let t1 = heightBound / widthBound * x + y > 0;  // true - on lower right region, false - on upper left region
-  let t2 = heightBound / widthBound * x - y > 0;  // true - on upper right region, false - on lower left region
+  const t1 = heightBound / widthBound * x + y > 0;  // true - on lower right region, false - on upper left region
+  const t2 = heightBound / widthBound * x - y > 0;  // true - on upper right region, false - on lower left region
 
-  let clipped = {x: 0, y: 0};
+  const clipped = {x: 0, y: 0};
 
   if (t1) {
     if (t2) {
@@ -69,11 +69,11 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
 
   @Input() proposition: Proposition;
 
-  selected: boolean = false;
+  selected = false;
 
-  preventSelect: boolean = true;
+  preventSelect = true;
 
-  editable: boolean = false;
+  editable = false;
 
   @ViewChild('label') label: ElementRef;
 
@@ -131,8 +131,8 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
 
   ngDoCheck() {
     // update line path if needed //
-    let vx = this.to.concept.x - this.from.concept.x;
-    let vy = this.to.concept.y - this.from.concept.y;
+    const vx = this.to.concept.x - this.from.concept.x;
+    const vy = this.to.concept.y - this.from.concept.y;
     if (
         this.shape.diff.x !== vx || this.shape.diff.y !== vy
         ||
@@ -147,8 +147,8 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
       this.shape.to.width = this.to.width;
       this.shape.to.height = this.to.height;
 
-      let fromClipped = rectangleClip(this.from.width, this.from.height, -this.shape.diff.x, -this.shape.diff.y);
-      let toClipped = rectangleClip(this.to.width, this.to.height, this.shape.diff.x, this.shape.diff.y);
+      const fromClipped = rectangleClip(this.from.width, this.from.height, -this.shape.diff.x, -this.shape.diff.y);
+      const toClipped = rectangleClip(this.to.width, this.to.height, this.shape.diff.x, this.shape.diff.y);
 
       this.shape.startClipping.x = fromClipped.x;
       this.shape.startClipping.y = fromClipped.y;
@@ -178,9 +178,9 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
 
     window.setTimeout(() => {
       this.label.nativeElement.focus();
-      let range = document.createRange();
+      const range = document.createRange();
       range.selectNodeContents(this.label.nativeElement);
-      let sel = window.getSelection();
+      const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
     }, 0);
@@ -247,7 +247,7 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
                 c.concept.y += e.browserEvent.movementY;
               }
             });
-            for (let c of [this.from, this.to]) {
+            for (const c of [this.from, this.to]) {
               c.concept.x += e.browserEvent.movementX;
               c.concept.y += e.browserEvent.movementY;
             }

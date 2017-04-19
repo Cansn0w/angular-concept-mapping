@@ -1,6 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
@@ -22,30 +23,30 @@ describe('Test AppComponent', () => {
         ButtonModule,
         MenubarModule,
         DialogModule,
+        RouterTestingModule,
+        NoopAnimationsModule,
 
         ConceptMapModule
       ],
-      providers: [
-        { provide: Router, useClass: undefined }
-      ]
+      providers: []
     });
 
     fixture = TestBed.createComponent(AppComponent);
   });
 
   it('should create the app', async(() => {
-    let app = fixture.debugElement.componentInstance;
+    const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
 
   it(`should show help message`, async(() => {
     fixture.detectChanges();
-    let compiled = fixture.debugElement.nativeElement;
+    const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('div.help-text').textContent).toContain('Double click to create a concept');
   }));
 
   it(`Help message should disappear after a double click`, async(() => {
-    let compiled = fixture.debugElement.nativeElement;
+    const compiled = fixture.debugElement.nativeElement;
 
     fixture.detectChanges();
     expect(compiled.querySelector('div.help-text').textContent).toContain('Double click to create a concept');
