@@ -73,9 +73,11 @@ export class AppComponent implements DoCheck {
   }
 
   ngDoCheck() {
-    this.menu[0].items[1].disabled = this.isEmpty;
-    this.menu[1].items[0].disabled = this.isEmpty;
-    this.menu[1].items[1].disabled = this.cmap.selection.selectedConceptComponent.size === 0 &&
+    // todo - casting below is posibly a bug introduced in primeNG 5
+    // todo - refactor this whole method.
+    (<MenuItem> this.menu[0].items[1]).disabled = this.isEmpty;
+    (<MenuItem> this.menu[1].items[0]).disabled = this.isEmpty;
+    (<MenuItem> this.menu[1].items[1]).disabled = this.cmap.selection.selectedConceptComponent.size === 0 &&
     this.cmap.selection.selectedPropositionComponent.size === 0;
   }
 
