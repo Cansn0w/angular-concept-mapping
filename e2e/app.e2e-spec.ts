@@ -83,11 +83,11 @@ describe('ConceptMap App', function() {
 
     expect(element.all(by.css('cm-concept.selected')).count()).toEqual(0);
 
-    browser.actions().keyDown(Key.CONTROL).perform();
+    browser.actions().keyDown(Key.SHIFT).perform();
     for (const p of page.points.slice(0, 4)) {
       page.click(p);
     }
-    browser.actions().keyUp(Key.CONTROL).perform();
+    browser.actions().keyUp(Key.SHIFT).perform();
 
     expect(element.all(by.css('cm-concept.selected')).count()).toEqual(page.points.slice(0, 4).length);
   });

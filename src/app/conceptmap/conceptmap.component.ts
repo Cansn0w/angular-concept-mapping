@@ -62,12 +62,12 @@ export class ConceptMapComponent implements DoCheck {
     return undefined;
   }
 
-  import(data) {
+  import(data: string) {
     this.selection.clear();
     this.cmap.parseJson(data);
   }
 
-  export() {
+  export(): string {
     return this.cmap.toJson();
   }
 

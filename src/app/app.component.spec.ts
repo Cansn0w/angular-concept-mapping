@@ -10,6 +10,8 @@ import { ConceptMapModule } from './conceptmap/conceptmap.module';
 
 import { ButtonModule, MenubarModule, DialogModule } from 'primeng/primeng';
 
+const TEST_MAP = '{"concepts":[{"text":"test","x":156,"y":116,"id":"f809d7b2"}],"propositions":[]}';
+
 describe('Test AppComponent', () => {
 
   let fixture: ComponentFixture<AppComponent>;
@@ -51,9 +53,9 @@ describe('Test AppComponent', () => {
     fixture.detectChanges();
     expect(compiled.querySelector('div.help-text').textContent).toContain('Double click to create a concept');
 
-    fixture.debugElement.triggerEventHandler('dblclick', {});
+    fixture.componentInstance.cmap.import(TEST_MAP);
     fixture.detectChanges();
-    expect(compiled.querySelector('div.help-text')).toBeNull;
+    expect(compiled.querySelector('div.help-text')).toBeNull();
   }));
 
 });

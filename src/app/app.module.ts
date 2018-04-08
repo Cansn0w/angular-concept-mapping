@@ -1,9 +1,5 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { RouterModule } from '@angular/router';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ButtonModule, MenubarModule, DialogModule } from 'primeng/primeng';
 
@@ -16,12 +12,7 @@ import { ConceptMapModule } from './conceptmap/conceptmap.module';
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    RouterModule.forRoot([]),
-    NoopAnimationsModule,
-
+    BrowserAnimationsModule,
     ButtonModule,
     MenubarModule,
     DialogModule,
