@@ -4,7 +4,7 @@ import { Concept } from './conceptmap.types';
 import { MouseService  } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
-import { keyMatch } from './etc';
+import { KeyCombination } from './utils';
 
 /**
  * Concept component. Define the concept html element.
@@ -22,6 +22,8 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
   @HostBinding('class.prevent-select') preventSelect = true;
 
   @HostBinding('attr.contenteditable') editable = false;
+
+  ctrlA = new KeyCombination('A', [KeyCombination.modifierKey.ctrl]);
 
   constructor(
     protected selection: SelectionService,
@@ -157,7 +159,7 @@ export class ConceptComponent implements OnInit, OnDestroy, Selectable {
   }
 
   @HostListener('keydown', ['$event']) keyDown(event) {
-    if (keyMatch(event, 'A', {ctrl: true}) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
+    if (this.ctrlA.match(event) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
       event.stopPropagation();
     }
     setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.

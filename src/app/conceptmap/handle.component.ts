@@ -4,8 +4,6 @@ import { Concept, ConceptMap, Proposition } from './conceptmap.types';
 import { MouseService  } from './mouse.service';
 import { ConceptComponent } from './concept.component';
 
-import { ie } from './etc';
-
 /**
  * Handle component. used to create propositions.
  * This component is draggable so the user can create propositions by dragging from a concept to another.
@@ -29,10 +27,6 @@ export class HandleComponent implements DoCheck, OnChanges {
     private mouse: MouseService,
     private cmap: ConceptMap
   ) { }
-
-  get ie () {
-    return ie;
-  }
 
   ngOnChanges() {
     this.x = this.from.concept.x;

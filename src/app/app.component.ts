@@ -1,9 +1,10 @@
 import { Component, HostListener, ViewChild, DoCheck } from '@angular/core';
-import { ConceptMapComponent } from './conceptmap/conceptmap.component';
-
 import { MenuItem } from 'primeng/primeng';
 
-import { ie, keyMatch } from './conceptmap/etc';
+import { ConceptMapComponent } from './conceptmap/conceptmap.component';
+
+import { KeyCombination } from './conceptmap/utils';
+import { ie } from './etc';
 
 @Component({
   selector: 'cm-root',
@@ -11,7 +12,12 @@ import { ie, keyMatch } from './conceptmap/etc';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements DoCheck {
+
   @ViewChild(ConceptMapComponent) cmap: ConceptMapComponent;
+
+  ctrlA = new KeyCombination('A', [KeyCombination.modifierKey.ctrl]);
+  ctrlS = new KeyCombination('S', [KeyCombination.modifierKey.ctrl]);
+  ctrlO = new KeyCombination('O', [KeyCombination.modifierKey.ctrl]);
 
   menu: MenuItem[] = [
       {
@@ -43,6 +49,7 @@ export class AppComponent implements DoCheck {
     ];
 
   importTool = {
+    // todo - refactor this
     _file: undefined,
     visible: false,
     chooseFile: (event) => {
@@ -105,17 +112,17 @@ export class AppComponent implements DoCheck {
       this.cmap.deleteSelected();
     } else
     // Ctrl-A: select all
-    if (keyMatch(event, 'A', {ctrl: true})) {
+    if (this.ctrlA.match(event)) {
       this.cmap.selectAll();
       event.preventDefault();
     } else
     // Ctrl-S: export
-    if (keyMatch(event, 'S', {ctrl: true})) {
+    if (this.ctrlS.match(event)) {
       this.export();
       event.preventDefault();
     }
     // Ctrl-O: open
-    if (keyMatch(event, 'O', {ctrl: true})) {
+    if (this.ctrlO.match(event)) {
       this.importTool.visible = true;
       event.preventDefault();
     }

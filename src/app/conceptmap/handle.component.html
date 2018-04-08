@@ -1,6 +1,6 @@
 <svg>
-  <svg:path *ngIf="!dragged || ie" [attr.d]="linePath()"></svg:path>
-  <svg:path *ngIf="dragged && !ie" [attr.d]="linePath()" marker-end="url(#cm-arrow)"></svg:path>
+  <svg:path *ngIf="!dragged" [attr.d]="linePath()"></svg:path>
+  <svg:path *ngIf="dragged" [attr.d]="linePath()" marker-end="url(#cm-arrow)"></svg:path>
 </svg>
 
 <div *ngIf="!dragged" id="cm-handle-label" class="prevent-select" [style.left.px]="x" [style.top.px]="y" (mousedown)="mouseDown($event);">

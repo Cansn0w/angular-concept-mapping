@@ -6,7 +6,7 @@ import { MouseService } from './mouse.service';
 import { SelectionService, Selectable } from './selection.service';
 import { ComponentManager } from './componentmanager.service';
 
-import { ie, keyMatch } from './etc';
+import { KeyCombination } from './utils';
 
 /**
  * Function used to calculate how proposition lines are to be clipped by concepts
@@ -75,6 +75,8 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
 
   editable = false;
 
+  ctrlA = new KeyCombination('A', [KeyCombination.modifierKey.ctrl]);
+
   @ViewChild('label') label: ElementRef;
 
   from: ConceptComponent;
@@ -101,10 +103,6 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
 
   get labelY() {
     return (this.from.concept.y + this.shape.startClipping.y + this.to.concept.y + this.shape.endClippint.y) / 2;
-  }
-
-  get ie() {
-    return ie;
   }
 
   get svgLinePath() {
@@ -271,7 +269,7 @@ export class PropositionComponent implements OnInit, OnDestroy, DoCheck, Selecta
   }
 
   keyDown(event) {
-    if (keyMatch(event, 'A', {ctrl: true}) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
+    if (this.ctrlA.match(event) || (event.key === 'Delete' || event.key === 'Del' || event.which === 46)) {
       event.stopPropagation();
     }
     setTimeout(() => {}, 0);  // used to manually trigger angular life cycle check to detect element size change.
