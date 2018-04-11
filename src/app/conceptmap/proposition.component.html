@@ -2,4 +2,4 @@
   <svg:path [attr.d]="svgLinePath" marker-end="url(#cm-arrow)"></svg:path>
 </svg>
 
-<div #label class="cm-label" [style.top.px]="labelY" [style.left.px]="labelX" (mousedown)="mouseDown($event);" (mouseup)="mouseUp($event);" (dblclick)="doubleClick($event);" (keydown)="keyDown($event)" [class.selected]="selected" [class.prevent-select]="preventSelect" [attr.contenteditable]="editable" cmContenteditableModel="proposition.text"></div>
+<div #label class="cm-label" [style.top.px]="labelY" [style.left.px]="labelX" (mousedown)="mouseDown($event);" (mouseup)="mouseUp($event);" (dblclick)="doubleClick($event);" (keydown)="keyDown($event)" [class.selected]="selected" [class.prevent-select]="preventSelect" [attr.contenteditable]="editable" [(cmContenteditableModel)]="proposition.text"></div>

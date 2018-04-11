@@ -5,8 +5,8 @@ import { Directive, OnChanges, HostListener, ElementRef, Input, Output, EventEmi
 })
 export class ContenteditableDirective implements OnChanges {
 
-  @Input() model: string;
-  @Output() update = new EventEmitter();
+  @Input() cmContenteditableModel: string;
+  @Output() cmContenteditableModelChange = new EventEmitter();
 
   constructor(private element: ElementRef) { }
 
@@ -15,10 +15,10 @@ export class ContenteditableDirective implements OnChanges {
   }
 
   @HostListener('blur') updateModel() {
-    setTimeout(() => this.update.emit(this.element.nativeElement.innerHTML), 0);
+    setTimeout(() => this.cmContenteditableModelChange.emit(this.element.nativeElement.innerHTML), 0);
   }
 
   refreshView() {
-    this.element.nativeElement.innerHTML = this.model;
+    this.element.nativeElement.innerHTML = this.cmContenteditableModel;
   }
 }
