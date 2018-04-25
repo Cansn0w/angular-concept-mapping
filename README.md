@@ -1,8 +1,8 @@
-# Angular2 Concept Mapping Tool
+# Angular Concept Mapping Tool
 
 Angular2 web app for creating [concept maps](https://en.wikipedia.org/wiki/Concept_map).
 
-You can use this app from [Github pages branch of this repository](https://cansn0w.github.io/angular2-concept-mapping/).
+You can use this app from [Github pages branch of this repository](https://cansn0w.github.io/angular-concept-mapping/).
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli), so you may run, built and test this project with angular-cli.
 
