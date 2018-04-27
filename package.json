@@ -23,12 +23,12 @@
     "@angular/router": "^5.2.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
-    "primeng": "^5.2.4",
+    "primeng": "^5.2.5",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },
   "devDependencies": {
-    "@angular/cli": "~1.7.3",
+    "@angular/cli": "~1.7.4",
     "@angular/compiler-cli": "^5.2.0",
     "@angular/language-service": "^5.2.0",
     "@types/jasmine": "~2.8.3",
