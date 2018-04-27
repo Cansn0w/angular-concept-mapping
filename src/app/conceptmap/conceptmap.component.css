@@ -24,6 +24,7 @@ path {
 }
 
 #cm-handle-label {
+  padding: 2px 4px;
   position: absolute;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -32,9 +33,6 @@ path {
 
 .prevent-select {
   user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 
 .selected {

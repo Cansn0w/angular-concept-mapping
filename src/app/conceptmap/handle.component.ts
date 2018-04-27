@@ -30,7 +30,7 @@ export class HandleComponent implements DoCheck, OnChanges {
 
   ngOnChanges() {
     this.x = this.from.concept.x;
-    this.y = this.from.concept.y - this.from.height / 2 - 16;
+    this.y = this.from.concept.y - this.from.height / 2 - 20;
   }
 
   ngDoCheck() {
@@ -45,8 +45,7 @@ export class HandleComponent implements DoCheck, OnChanges {
       this.conceptPosition.x = this.from.concept.x;
       this.conceptPosition.y = this.from.concept.y;
       this.conceptPosition.height = this.from.height;
-      this.x = this.from.concept.x;
-      this.y = this.from.concept.y - this.from.height / 2 - 16;
+      this.ngOnChanges();
     }
   }
 
